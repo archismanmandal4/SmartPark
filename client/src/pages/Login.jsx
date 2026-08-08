@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,8 +12,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ==========================================
+  // LOGIN
+  // ==========================================
+
   const handleLogin = async () => {
-    if (!email || !password) {
+    if (!email.trim() || !password) {
       alert("Please enter email and password");
       return;
     }
@@ -20,56 +25,35 @@ function Login() {
     try {
       setLoading(true);
 
-      try {
-  setLoading(true);
+      const API_URL =
+        import.meta.env.VITE_API_URL ||
+        "http://localhost:5000";
 
-  const res = await axios.post(
-    `${import.meta.env.VITE_API_URL}/api/auth/login`,
-    {
-      email: email.trim(),
-      password,
-    }
-  );
-
-  console.log("LOGIN RESPONSE:", res.data);
-
-  localStorage.setItem("token", res.data.token);
-
-  if (res.data.user) {
-    localStorage.setItem(
-      "user",
-      JSON.stringify(res.data.user)
-    );
-  }
-
-  alert("Login Successful!");
-
-  if (res.data.user?.role === "owner") {
-    navigate("/owner-dashboard");
-  } else {
-    navigate("/");
-  }
-
-} catch (error) {
-  console.error("LOGIN ERROR:", error);
-
-  alert(
-    error.response?.data?.message ||
-    "Login Failed"
-  );
-} finally {
-  setLoading(false);
-}
+      const res = await axios.post(
+        `${API_URL}/api/auth/login`,
+        {
+          email: email.trim(),
+          password,
+        }
+      );
 
       console.log("LOGIN RESPONSE:", res.data);
 
-      // Save token
-      localStorage.setItem(
-        "token",
-        res.data.token
-      );
+      // ======================================
+      // SAVE TOKEN
+      // ======================================
 
-      // Save user
+      if (res.data.token) {
+        localStorage.setItem(
+          "token",
+          res.data.token
+        );
+      }
+
+      // ======================================
+      // SAVE USER
+      // ======================================
+
       if (res.data.user) {
         localStorage.setItem(
           "user",
@@ -87,27 +71,34 @@ function Login() {
         localStorage.getItem("user")
       );
 
+      // ======================================
+      // SUCCESS
+      // ======================================
+
       alert("Login Successful!");
 
-      // ==========================================
-      // OWNER / NORMAL USER REDIRECT
-      // ==========================================
+      // ======================================
+      // REDIRECT
+      // ======================================
 
       if (res.data.user?.role === "owner") {
-        navigate("/owner-dashboard");
+        navigate("/owner-dashboard", {
+          replace: true,
+        });
       } else {
-        navigate("/");
+        navigate("/", {
+          replace: true,
+        });
       }
 
-      // Refresh Navbar login state
-      window.location.reload();
-
+      // IMPORTANT:
+      // Do NOT use window.location.reload()
     } catch (error) {
-      console.log("LOGIN ERROR:", error);
+      console.error("LOGIN ERROR:", error);
 
       alert(
-        error.response?.data?.message ||
-        "Login Failed"
+        error?.response?.data?.message ||
+          "Login Failed"
       );
     } finally {
       setLoading(false);
@@ -123,6 +114,10 @@ function Login() {
       handleLogin();
     }
   };
+
+  // ==========================================
+  // PAGE
+  // ==========================================
 
   return (
     <>
@@ -211,6 +206,7 @@ function Login() {
                   setEmail(e.target.value)
                 }
                 onKeyDown={handleKeyDown}
+                disabled={loading}
               />
 
             </div>
@@ -232,6 +228,7 @@ function Login() {
                   setPassword(e.target.value)
                 }
                 onKeyDown={handleKeyDown}
+                disabled={loading}
               />
 
             </div>
@@ -240,6 +237,7 @@ function Login() {
             {/* LOGIN BUTTON */}
 
             <button
+              type="button"
               className="login-submit"
               onClick={handleLogin}
               disabled={loading}
@@ -269,6 +267,7 @@ function Login() {
               </span>
 
               <button
+                type="button"
                 onClick={() =>
                   navigate("/register")
                 }
