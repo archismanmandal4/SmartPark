@@ -1,0 +1,217 @@
+/* ==========================================
+   SMARTPARK NAVBAR
+========================================== */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 50px;
+    background: rgba(45, 10, 15, 0.97);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(212, 163, 115, 0.15);
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.navbar-logo {
+    color: white;
+    text-decoration: none;
+    font-size: 27px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   NAVIGATION
+========================================== */
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   LINKS
+========================================== */
+
+.navbar-link {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: 0.3s ease;
+}
+
+.navbar-link:hover {
+    color: #f5d0a9;
+}
+
+.navbar-link-active {
+    color: #d4a373;
+}
+
+
+/* ==========================================
+   USER
+========================================== */
+
+.navbar-user {
+    background: rgba(212, 163, 115, 0.12);
+    border: 1px solid rgba(212, 163, 115, 0.25);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-weight: 600;
+    color: #f5d0a9;
+    white-space: nowrap;
+}
+
+
+/* ==========================================
+   BOOK BUTTON
+========================================== */
+
+.navbar-book {
+    padding: 10px 18px;
+    border: 1px solid rgba(255, 112, 135, 0.35);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #a51e3d, #7f1530);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 8px 25px rgba(112, 13, 37, 0.3);
+    transition: 0.25s ease;
+}
+
+.navbar-book:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+.navbar-logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border: 1px solid rgba(255, 112, 135, 0.35);
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7f1530, #5d1025);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 6px 20px rgba(112, 13, 37, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.navbar-logout:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1000px) {
+    .navbar {
+        padding: 16px 25px;
+    }
+    .navbar-links {
+        gap: 16px;
+    }
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 14px 16px;
+        flex-direction: column;
+        gap: 14px;
+        align-items: stretch;
+    }
+    .navbar-logo {
+        text-align: center;
+        font-size: 24px;
+    }
+    .navbar-links {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        white-space: normal;
+    }
+    .navbar-link {
+        font-size: 13px;
+        padding: 6px 4px;
+    }
+    .navbar-user {
+        font-size: 12px;
+        padding: 7px 10px;
+    }
+    .navbar-book,
+    .navbar-logout {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+
+/* ==========================================
+   SMALL PHONES
+========================================== */
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 12px 10px;
+        gap: 10px;
+    }
+    .navbar-logo {
+        font-size: 22px;
+    }
+    .navbar-links {
+        gap: 6px;
+    }
+    .navbar-link {
+        font-size: 12px;
+    }
+    .navbar-user {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .navbar-book,
+    .navbar-logout {
+        font-size: 11px;
+        padding: 7px 9px;
+    }
+}
