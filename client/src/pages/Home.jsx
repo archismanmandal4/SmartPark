@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import heroImage from "../assets/smartpark-hero.png";
-
+import Navbar from "../components/Navbar";
 
 function Home() {
 

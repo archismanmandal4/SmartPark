@@ -1119,3 +1119,105 @@ html {
     gap: 12px;
     flex-direction: row;
 }
+
+
+/* =========================================
+   HOMEPAGE NAVBAR - MOBILE FIX
+========================================= */
+
+@media (max-width: 900px) {
+    .premium-navbar {
+        padding: 16px 22px !important;
+        flex-wrap: wrap !important;
+        gap: 15px !important;
+    }
+    .premium-logo {
+        flex-shrink: 0;
+    }
+    .premium-nav-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 8px 14px !important;
+        width: 100% !important;
+        order: 3 !important;
+    }
+    .navbar-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .nav-link {
+        font-size: 13px !important;
+        padding: 5px 3px !important;
+    }
+    .nav-book-btn,
+    .nav-logout-btn {
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+    }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+    .premium-navbar {
+        padding: 14px 12px !important;
+        justify-content: center !important;
+    }
+    .premium-logo {
+        width: 100%;
+        text-align: center;
+        font-size: 25px !important;
+    }
+    .premium-nav-links {
+        width: 100% !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, auto) !important;
+        justify-content: center !important;
+        gap: 8px 18px !important;
+        order: 2 !important;
+    }
+    .navbar-actions {
+        width: 100% !important;
+        order: 3 !important;
+    }
+    .nav-link {
+        font-size: 13px !important;
+        white-space: nowrap !important;
+    }
+    .nav-book-btn,
+    .nav-logout-btn {
+        font-size: 12px !important;
+        padding: 8px 12px !important;
+    }
+}
+
+
+/* =========================================
+   VERY SMALL PHONES
+========================================= */
+
+@media (max-width: 400px) {
+    .premium-navbar {
+        padding: 12px 8px !important;
+    }
+    .premium-nav-links {
+        grid-template-columns: repeat(2, auto) !important;
+        gap: 8px 20px !important;
+    }
+    .nav-link {
+        font-size: 12px !important;
+    }
+    .nav-book-btn,
+    .nav-logout-btn {
+        font-size: 11px !important;
+        padding: 7px 10px !important;
+    }
+}
