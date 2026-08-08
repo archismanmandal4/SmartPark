@@ -18,7 +18,7 @@ function Booking() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/api/parking/${id}`)
+      .get(`VITE_API_URL=https://smartpark-tvls.onrender.com/api/parking/${id}`)
       .then((res) => {
         setParking(res.data);
       })
@@ -49,7 +49,7 @@ function Booking() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/bookings",
+        "VITE_API_URL=https://smartpark-tvls.onrender.com/api/bookings",
         {
           parkingId: id,
           vehicleNumber: vehicleNumber.trim(),

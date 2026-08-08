@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import MapView from "../components/MapView";
@@ -7,65 +8,62 @@ import "./ParkingMap.css";
 
 function ParkingMap() {
   const [parkings, setParkings] = useState([]);
+  const [parkingLoading, setParkingLoading] =
+    useState(true);
 
   return (
     <>
-      {/* NAVBAR */}
       <Navbar />
 
       <div className="parking-map-page">
 
-        {/* ==========================================
+        {/* =====================================
             PAGE HEADER
-        ========================================== */}
+        ===================================== */}
 
         <div className="parking-map-header">
 
           <div>
-
             <div className="parking-map-eyebrow">
               SMARTPARK / PARKING
             </div>
 
             <h1>
-              Find your <span>parking space.</span>
+              Find your{" "}
+              <span>
+                parking space.
+              </span>
             </h1>
 
             <p>
-              Discover available parking locations,
-              compare spaces and choose where you want
-              to park.
+              Discover available parking
+              locations, compare spaces and
+              choose where you want to park.
             </p>
-
           </div>
 
           <div className="parking-live-status">
-
             <span className="parking-live-dot"></span>
-
             Live Availability
-
           </div>
 
         </div>
 
-
-        {/* ==========================================
-            MAP AREA
-        ========================================== */}
+        {/* =====================================
+            MAP LAYOUT
+        ===================================== */}
 
         <div className="parking-map-layout">
 
-          {/* ========================================
-              PARKING LIST
-          ======================================== */}
+          {/* ===================================
+              PARKING SIDEBAR
+          =================================== */}
 
           <aside className="parking-sidebar">
 
             <div className="sidebar-header">
 
               <div>
-
                 <span className="sidebar-label">
                   AVAILABLE LOCATIONS
                 </span>
@@ -73,7 +71,6 @@ function ParkingMap() {
                 <h2>
                   Parking Near You
                 </h2>
-
               </div>
 
               <span className="parking-count">
@@ -82,10 +79,9 @@ function ParkingMap() {
 
             </div>
 
-
             <div className="parking-list">
 
-              {parkings.length === 0 ? (
+              {parkingLoading ? (
 
                 <div className="no-parking">
 
@@ -98,8 +94,27 @@ function ParkingMap() {
                   </h3>
 
                   <p>
-                    Finding parking locations
-                    near you.
+                    Finding parking
+                    locations near you.
+                  </p>
+
+                </div>
+
+              ) : parkings.length === 0 ? (
+
+                <div className="no-parking">
+
+                  <div className="no-parking-icon">
+                    P
+                  </div>
+
+                  <h3>
+                    No parking found
+                  </h3>
+
+                  <p>
+                    No parking locations
+                    are currently available.
                   </p>
 
                 </div>
@@ -112,7 +127,9 @@ function ParkingMap() {
                     key={parking._id}
                     parking={parking}
                     distance={
-                      parking.distance.toFixed(2)
+                      Number(
+                        parking.distance || 0
+                      ).toFixed(2)
                     }
                   />
 
@@ -124,15 +141,17 @@ function ParkingMap() {
 
           </aside>
 
-
-          {/* ========================================
+          {/* ===================================
               MAP
-          ======================================== */}
+          =================================== */}
 
           <main className="map-container">
 
             <MapView
-              onParkingSorted={setParkings}
+              onParkingSorted={(data) => {
+                setParkings(data);
+                setParkingLoading(false);
+              }}
             />
 
           </main>

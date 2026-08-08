@@ -108,7 +108,7 @@ useEffect(()=>{
 
 
 fetch(
-"http://localhost:5000/api/dashboard"
+"VITE_API_URL=https://smartpark-tvls.onrender.com/api/dashboard"
 )
 
 .then(res=>res.json())

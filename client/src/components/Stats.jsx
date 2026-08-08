@@ -12,7 +12,7 @@ function Stats() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/dashboard")
+      .get("VITE_API_URL=https://smartpark-tvls.onrender.com/api/dashboard")
       .then((res) => {
         setStats(res.data);
       })

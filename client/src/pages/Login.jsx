@@ -20,13 +20,46 @@ function Login() {
     try {
       setLoading(true);
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
-        {
-          email: email.trim(),
-          password,
-        }
-      );
+      try {
+  setLoading(true);
+
+  const res = await axios.post(
+    `${import.meta.env.VITE_API_URL}/api/auth/login`,
+    {
+      email: email.trim(),
+      password,
+    }
+  );
+
+  console.log("LOGIN RESPONSE:", res.data);
+
+  localStorage.setItem("token", res.data.token);
+
+  if (res.data.user) {
+    localStorage.setItem(
+      "user",
+      JSON.stringify(res.data.user)
+    );
+  }
+
+  alert("Login Successful!");
+
+  if (res.data.user?.role === "owner") {
+    navigate("/owner-dashboard");
+  } else {
+    navigate("/");
+  }
+
+} catch (error) {
+  console.error("LOGIN ERROR:", error);
+
+  alert(
+    error.response?.data?.message ||
+    "Login Failed"
+  );
+} finally {
+  setLoading(false);
+}
 
       console.log("LOGIN RESPONSE:", res.data);
 

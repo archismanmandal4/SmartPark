@@ -2,17 +2,20 @@ import { useMemo } from "react";
 import ParkingCard from "./ParkingCard";
 import "./ParkingList.css";
 
-function ParkingList({ parkings = [], userLocation }) {
+function ParkingList({
+  parkings = [],
+  userLocation = null,
+}) {
+  // ==========================================
+  // SORT PARKINGS BY DISTANCE
+  // ==========================================
 
-  // Sort parking locations by distance from user's location
   const sortedParkings = useMemo(() => {
-
     if (!Array.isArray(parkings)) {
       return [];
     }
 
-    // If no user location is available,
-    // keep the original parking order.
+    // No user location → keep original order
     if (!userLocation) {
       return parkings;
     }
@@ -27,10 +30,17 @@ function ParkingList({ parkings = [], userLocation }) {
       return parkings;
     }
 
-    // Calculate distance using Haversine formula
-    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    // ========================================
+    // HAVERSINE DISTANCE
+    // ========================================
 
-      const R = 6371; // Earth radius in km
+    const calculateDistance = (
+      lat1,
+      lon1,
+      lat2,
+      lon2
+    ) => {
+      const R = 6371;
 
       const dLat =
         ((lat2 - lat1) * Math.PI) / 180;
@@ -39,15 +49,14 @@ function ParkingList({ parkings = [], userLocation }) {
         ((lon2 - lon1) * Math.PI) / 180;
 
       const a =
-        Math.sin(dLat / 2) *
-          Math.sin(dLat / 2) +
+        Math.sin(dLat / 2) ** 2 +
         Math.cos((lat1 * Math.PI) / 180) *
           Math.cos((lat2 * Math.PI) / 180) *
-          Math.sin(dLon / 2) *
-          Math.sin(dLon / 2);
+          Math.sin(dLon / 2) ** 2;
 
       const c =
-        2 * Math.atan2(
+        2 *
+        Math.atan2(
           Math.sqrt(a),
           Math.sqrt(1 - a)
         );
@@ -55,15 +64,24 @@ function ParkingList({ parkings = [], userLocation }) {
       return R * c;
     };
 
+    // ========================================
+    // ADD DISTANCE
+    // ========================================
+
     return parkings
       .map((parking) => {
+        const latitude = Number(
+          parking?.latitude
+        );
 
-        const lat = Number(parking.latitude);
-        const lng = Number(parking.longitude);
+        const longitude = Number(
+          parking?.longitude
+        );
 
+        // Parking has no valid coordinates
         if (
-          !Number.isFinite(lat) ||
-          !Number.isFinite(lng)
+          !Number.isFinite(latitude) ||
+          !Number.isFinite(longitude)
         ) {
           return {
             ...parking,
@@ -74,32 +92,43 @@ function ParkingList({ parkings = [], userLocation }) {
         const distance = calculateDistance(
           userLat,
           userLng,
-          lat,
-          lng
+          latitude,
+          longitude
         );
 
         return {
           ...parking,
           distance,
         };
-
       })
-      .sort((a, b) => {
 
-        // Parking locations without coordinates
-        // go to the bottom.
-        if (a.distance === null) return 1;
-        if (b.distance === null) return -1;
+      // ======================================
+      // SORT NEAREST FIRST
+      // ======================================
+
+      .sort((a, b) => {
+        if (a.distance === null) {
+          return 1;
+        }
+
+        if (b.distance === null) {
+          return -1;
+        }
 
         return a.distance - b.distance;
       });
-
   }, [parkings, userLocation]);
+
+  // ==========================================
+  // RENDER
+  // ==========================================
 
   return (
     <section className="parking-list-section">
 
-      {/* HEADER */}
+      {/* ====================================
+          HEADER
+      ==================================== */}
 
       <div className="parking-list-header">
 
@@ -119,7 +148,9 @@ function ParkingList({ parkings = [], userLocation }) {
 
       </div>
 
-      {/* LIST */}
+      {/* ====================================
+          PARKING LIST
+      ==================================== */}
 
       <div className="parking-list">
 
@@ -147,10 +178,11 @@ function ParkingList({ parkings = [], userLocation }) {
           sortedParkings.map((parking) => (
 
             <ParkingCard
-              key={parking._id}
+              key={parking?._id}
               parking={parking}
               distance={
-                parking.distance !== null
+                parking?.distance !== null &&
+                parking?.distance !== undefined
                   ? parking.distance.toFixed(2)
                   : null
               }

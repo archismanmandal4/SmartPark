@@ -1,66 +1,92 @@
+
 import { useNavigate } from "react-router-dom";
 import "./ParkingCard.css";
 
 function ParkingCard({ parking, distance }) {
   const navigate = useNavigate();
 
-  // Prevent crash if parking data hasn't loaded yet
+  // Prevent crash if parking data is missing
   if (!parking) {
     return null;
   }
 
-  const availableSlots =
-    parking.totalSlots - parking.occupiedSlots;
+  // Safely convert slot values to numbers
+  const totalSlots = Number(parking.totalSlots) || 0;
+  const occupiedSlots = Number(parking.occupiedSlots) || 0;
+
+  const availableSlots = Math.max(
+    0,
+    totalSlots - occupiedSlots
+  );
+
+  const isAvailable = availableSlots > 0;
 
   return (
     <div className="parking-card">
 
-      {/* Header */}
+      {/* ===============================
+          HEADER
+      ================================ */}
+
       <div className="card-header">
 
-        <h3>{parking.name}</h3>
+        <h3>
+          {parking.name || "Parking Location"}
+        </h3>
 
         <span
           className={`status ${
-            availableSlots > 0 ? "available" : "full"
+            isAvailable ? "available" : "full"
           }`}
         >
-          {availableSlots > 0
-            ? "Available"
-            : "Full"}
+          {isAvailable ? "Available" : "Full"}
         </span>
 
       </div>
 
-      {/* Address */}
+
+      {/* ===============================
+          ADDRESS
+      ================================ */}
+
       <p>
-        📍 {parking.address}
+        📍 {parking.address || "Address unavailable"}
       </p>
 
-      <br />
 
-      {/* Features */}
+      {/* ===============================
+          FEATURES
+      ================================ */}
+
       <div className="chips">
 
         <span className="chip">
-           {parking.vehicleType || "Car/Bike"}
+          🚗 {parking.vehicleType || "Car/Bike"}
         </span>
 
         <span className="chip">
-           {distance ? `${distance} km` : "--"}
+          📍{" "}
+          {distance !== null &&
+          distance !== undefined
+            ? `${distance} km`
+            : "--"}
         </span>
 
         <span className="chip">
-           ₹{parking.pricePerHour}/hr
+          ₹{Number(parking.pricePerHour) || 0}/hr
         </span>
 
       </div>
 
-      {/* Slots */}
+
+      {/* ===============================
+          SLOT INFORMATION
+      ================================ */}
+
       <div className="slots">
 
         <div>
-          <strong>{parking.totalSlots}</strong>
+          <strong>{totalSlots}</strong>
           <p>Total</p>
         </div>
 
@@ -70,23 +96,27 @@ function ParkingCard({ parking, distance }) {
         </div>
 
         <div>
-          <strong>{parking.occupiedSlots}</strong>
+          <strong>{occupiedSlots}</strong>
           <p>Occupied</p>
         </div>
 
       </div>
 
-      {/* Button */}
+
+      {/* ===============================
+          BOOK BUTTON
+      ================================ */}
+
       <button
         className="book-btn"
-        disabled={availableSlots === 0}
-        onClick={() =>
-          navigate(`/booking/${parking._id}`)
-        }
+        disabled={!isAvailable}
+        onClick={() => {
+          if (isAvailable) {
+            navigate(`/booking/${parking._id}`);
+          }
+        }}
       >
-        {availableSlots > 0
-          ? "Book Now "
-          : "Parking Full"}
+        {isAvailable ? "Book Now →" : "Parking Full"}
       </button>
 
     </div>

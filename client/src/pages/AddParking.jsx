@@ -93,7 +93,7 @@ function AddParking() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:5000/api/parking",
+        "VITE_API_URL=https://smartpark-tvls.onrender.com/api/parking",
         {
           name: parking.name.trim(),
 

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 import {
@@ -14,6 +15,20 @@ import { getDistance } from "geolib";
 
 import "leaflet/dist/leaflet.css";
 import "./MapView.css";
+
+// ==========================================
+// API URL
+// ==========================================
+
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://smartpark-tvls.onrender.com";
+
+// ...
+
+const res = await axios.get(
+  `${API_URL}/api/parking`
+);
 
 // ==========================================
 // USER ICON
@@ -64,7 +79,7 @@ function RecenterMap({ location }) {
 }
 
 // ==========================================
-// MAPVIEW
+// MAP VIEW
 // ==========================================
 
 function MapView({ onParkingSorted }) {
@@ -72,10 +87,16 @@ function MapView({ onParkingSorted }) {
 
   const [parkings, setParkings] = useState([]);
 
+  const [loadingParkings, setLoadingParkings] =
+    useState(true);
+
   const [locating, setLocating] = useState(false);
 
+  const [parkingError, setParkingError] =
+    useState("");
+
   // ==========================================
-  // GET INITIAL USER LOCATION
+  // GET USER LOCATION
   // ==========================================
 
   useEffect(() => {
@@ -96,9 +117,13 @@ function MapView({ onParkingSorted }) {
         });
       },
 
-      () => {
-        // Default Kolkata
+      (error) => {
+        console.error(
+          "INITIAL LOCATION ERROR:",
+          error
+        );
 
+        // Default Kolkata location
         setLocation({
           lat: 22.5726,
           lng: 88.3639,
@@ -114,89 +139,112 @@ function MapView({ onParkingSorted }) {
   }, []);
 
   // ==========================================
-  // FETCH PARKING + SORT BY USER LOCATION
+  // FETCH PARKINGS
   // ==========================================
 
   useEffect(() => {
-    if (!location) return;
-
     const fetchParking = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:5000/api/parking"
-        );
-
-        const parkingData = Array.isArray(res.data)
-          ? res.data
-          : res.data.data || [];
-
-        // ======================================
-        // REMOVE INVALID COORDINATES
-        // ======================================
-
-        const validParkings = parkingData.filter(
-          (park) => {
-            const lat = Number(park.latitude);
-            const lng = Number(park.longitude);
-
-            return (
-              Number.isFinite(lat) &&
-              Number.isFinite(lng)
-            );
-          }
-        );
-
-        // ======================================
-        // CALCULATE DISTANCE FROM USER
-        // ======================================
-
-        const sortedParkings = validParkings
-          .map((park) => {
-            const parkingLat =
-              Number(park.latitude);
-
-            const parkingLng =
-              Number(park.longitude);
-
-            const distanceInMeters =
-              getDistance(
-                {
-                  latitude: Number(
-                    location.lat
-                  ),
-
-                  longitude: Number(
-                    location.lng
-                  ),
-                },
-
-                {
-                  latitude: parkingLat,
-                  longitude: parkingLng,
-                }
-              );
-
-            return {
-              ...park,
-
-              distance:
-                distanceInMeters / 1000,
-            };
-          })
-
-          // ====================================
-          // NEAREST FIRST
-          // ====================================
-
-          .sort(
-            (a, b) =>
-              a.distance - b.distance
-          );
+        setLoadingParkings(true);
+        setParkingError("");
 
         console.log(
-          "USER LOCATION:",
-          location
+          "FETCHING PARKINGS FROM:",
+          `${API_URL}/api/parking`
         );
+
+        const response = await axios.get(
+          `${API_URL}/api/parking`
+        );
+
+        console.log(
+          "PARKING API RESPONSE:",
+          response.data
+        );
+
+        const parkingData = Array.isArray(
+          response.data
+        )
+          ? response.data
+          : response.data?.data || [];
+
+        // ========================================
+        // VALID PARKINGS
+        // ========================================
+
+        const validParkings =
+          parkingData.filter((parking) => {
+            const latitude = Number(
+              parking.latitude
+            );
+
+            const longitude = Number(
+              parking.longitude
+            );
+
+            return (
+              Number.isFinite(latitude) &&
+              Number.isFinite(longitude)
+            );
+          });
+
+        // ========================================
+        // SORT BY DISTANCE
+        // ========================================
+
+        let sortedParkings = validParkings;
+
+        if (location) {
+          const userLat = Number(
+            location.lat
+          );
+
+          const userLng = Number(
+            location.lng
+          );
+
+          sortedParkings =
+            validParkings
+              .map((parking) => {
+                const parkingLat = Number(
+                  parking.latitude
+                );
+
+                const parkingLng = Number(
+                  parking.longitude
+                );
+
+                const distanceMeters =
+                  getDistance(
+                    {
+                      latitude: userLat,
+                      longitude: userLng,
+                    },
+                    {
+                      latitude: parkingLat,
+                      longitude: parkingLng,
+                    }
+                  );
+
+                return {
+                  ...parking,
+                  distance:
+                    distanceMeters / 1000,
+                };
+              })
+              .sort(
+                (a, b) =>
+                  a.distance - b.distance
+              );
+        } else {
+          sortedParkings =
+            validParkings.map(
+              (parking) => ({
+                ...parking,
+                distance: null,
+              })
+            );
+        }
 
         console.log(
           "SORTED PARKINGS:",
@@ -205,24 +253,39 @@ function MapView({ onParkingSorted }) {
 
         setParkings(sortedParkings);
 
-        // Send sorted parking list
-        // to ParkingMap.jsx
+        // Send data to ParkingMap
         if (onParkingSorted) {
           onParkingSorted(
             sortedParkings
           );
         }
-
       } catch (error) {
         console.error(
           "PARKING FETCH ERROR:",
           error
         );
+
+        console.error(
+          "ERROR RESPONSE:",
+          error.response?.data
+        );
+
+        setParkingError(
+          error.response?.data?.message ||
+            "Unable to load parking locations."
+        );
+
+        setParkings([]);
+
+        if (onParkingSorted) {
+          onParkingSorted([]);
+        }
+      } finally {
+        setLoadingParkings(false);
       }
     };
 
     fetchParking();
-
   }, [location, onParkingSorted]);
 
   // ==========================================
@@ -252,8 +315,6 @@ function MapView({ onParkingSorted }) {
           newLocation
         );
 
-        // This triggers the sorting
-        // useEffect again.
         setLocation(newLocation);
 
         setLocating(false);
@@ -272,7 +333,7 @@ function MapView({ onParkingSorted }) {
           error.PERMISSION_DENIED
         ) {
           alert(
-            "Location permission was denied. Please allow location access and try again."
+            "Location permission was denied. Please allow location access."
           );
         } else if (
           error.code ===
@@ -304,13 +365,21 @@ function MapView({ onParkingSorted }) {
   };
 
   // ==========================================
-  // LOADING
+  // MAP LOADING
   // ==========================================
 
   if (!location) {
     return (
       <div className="map-loading">
-        Loading Map...
+        <div className="map-loading-spinner">
+          P
+        </div>
+
+        <h3>Loading Map...</h3>
+
+        <p>
+          Detecting your location...
+        </p>
       </div>
     );
   }
@@ -320,7 +389,7 @@ function MapView({ onParkingSorted }) {
   // ==========================================
 
   return (
-    <div className="smartpark-map-wrapper">
+    <div className="map-view-wrapper">
 
       <MapContainer
         center={[
@@ -338,7 +407,7 @@ function MapView({ onParkingSorted }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* RECENTER MAP */}
+        {/* RECENTER */}
 
         <RecenterMap
           location={location}
@@ -366,61 +435,112 @@ function MapView({ onParkingSorted }) {
 
         {/* PARKING MARKERS */}
 
-        {parkings.map((park) => (
-          <Marker
-            key={park._id}
-            position={[
-              Number(park.latitude),
-              Number(park.longitude),
-            ]}
-            icon={parkingIcon}
-          >
-            <Popup>
+        {parkings.map((parking) => {
+          const totalSlots =
+            Number(
+              parking.totalSlots
+            ) || 0;
 
-              <h3>
-                {park.name}
-              </h3>
+          const occupiedSlots =
+            Number(
+              parking.occupiedSlots
+            ) || 0;
 
-              <p>
-                {park.address}
-              </p>
+          const availableSlots =
+            Math.max(
+              0,
+              totalSlots -
+                occupiedSlots
+            );
 
-              <p>
-                Available:{" "}
-                {Number(
-                  park.totalSlots || 0
-                ) -
-                  Number(
-                    park.occupiedSlots || 0
+          return (
+            <Marker
+              key={parking._id}
+              position={[
+                Number(
+                  parking.latitude
+                ),
+                Number(
+                  parking.longitude
+                ),
+              ]}
+              icon={parkingIcon}
+            >
+              <Popup>
+
+                <h3>
+                  {parking.name ||
+                    "Parking Location"}
+                </h3>
+
+                <p>
+                  📍{" "}
+                  {parking.address ||
+                    "Address unavailable"}
+                </p>
+
+                <p>
+                  Available:{" "}
+                  {availableSlots}
+                </p>
+
+                <p>
+                  ₹
+                  {Number(
+                    parking.pricePerHour
+                  ) || 0}
+                  /hour
+                </p>
+
+                {parking.distance !==
+                  null &&
+                  parking.distance !==
+                    undefined && (
+                    <p>
+                      {
+                        parking.distance.toFixed(
+                          2
+                        )
+                      }{" "}
+                      km away
+                    </p>
                   )}
-              </p>
 
-              <p>
-                ₹
-                {park.pricePerHour}
-                /hour
-              </p>
-
-              <p>
-                {park.distance.toFixed(2)}
-                {" "}km away
-              </p>
-
-            </Popup>
-          </Marker>
-        ))}
+              </Popup>
+            </Marker>
+          );
+        })}
 
       </MapContainer>
 
       {/* =====================================
+          PARKING LOADING MESSAGE
+      ====================================== */}
+
+      {loadingParkings && (
+        <div className="map-parking-loading">
+          Loading nearby parking...
+        </div>
+      )}
+
+      {/* =====================================
+          PARKING ERROR
+      ====================================== */}
+
+      {!loadingParkings &&
+        parkingError && (
+          <div className="map-parking-error">
+            {parkingError}
+          </div>
+        )}
+
+      {/* =====================================
           LOCATE ME BUTTON
-      ===================================== */}
+      ====================================== */}
 
       <button
         className={`locate-me-button ${
-          locating
-            ? "locating"
-            : ""
+          locating ? "locating" : ""
         }`}
         onClick={handleLocateMe}
         disabled={locating}

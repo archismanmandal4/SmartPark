@@ -68,7 +68,7 @@ function OwnerDashboard() {
       setLoading(true);
 
       const response = await axios.get(
-        "http://localhost:5000/api/parking",
+        "`${import.meta.env.VITE_API_URL}/api/...`/api/parking",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -292,7 +292,7 @@ function OwnerDashboard() {
 
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/parking",
+        "`${import.meta.env.VITE_API_URL}/api/...`/api/parking",
         {
           headers: {
             Authorization: `Bearer ${token}`,

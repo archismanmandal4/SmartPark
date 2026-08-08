@@ -27,14 +27,14 @@ function Register() {
       setLoading(true);
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
-        {
-          name: name.trim(),
-          email: email.trim(),
-          password,
-          role,
-        }
-      );
+  `${import.meta.env.VITE_API_URL}/api/auth/register`,
+  {
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      role,
+      }
+    );
 
       console.log("REGISTER RESPONSE:", res.data);
 

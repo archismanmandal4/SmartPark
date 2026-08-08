@@ -24,7 +24,7 @@ function MyBookings() {
       }
 
       const res = await axios.get(
-        "http://localhost:5000/api/bookings/my",
+        "VITE_API_URL=https://smartpark-tvls.onrender.com/api/bookings/my",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ function MyBookings() {
       setCancelling(id);
 
       await axios.put(
-        `http://localhost:5000/api/bookings/cancel/${id}`,
+        `VITE_API_URL=https://smartpark-tvls.onrender.com/api/bookings/cancel/${id}`,
         {},
         {
           headers: {

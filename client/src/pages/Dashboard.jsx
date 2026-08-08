@@ -13,34 +13,59 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   // ==========================================
+  // API URL
+  // ==========================================
+
+  const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:5000";
+
+  // ==========================================
   // LOAD USER + BOOKINGS
   // ==========================================
 
   useEffect(() => {
     const loadDashboard = async () => {
-      const storedUser = localStorage.getItem("user");
-      const token = localStorage.getItem("token");
+      const storedUser =
+        localStorage.getItem("user");
 
-      // No login
+      const token =
+        localStorage.getItem("token");
+
+      // ----------------------------------------
+      // CHECK LOGIN
+      // ----------------------------------------
+
       if (!storedUser || !token) {
-        navigate("/login", { replace: true });
+        navigate("/login", {
+          replace: true,
+        });
         return;
       }
 
       try {
-        const parsedUser = JSON.parse(storedUser);
+        const parsedUser =
+          JSON.parse(storedUser);
 
-        // Owner should use Owner Dashboard
+        // --------------------------------------
+        // OWNER REDIRECT
+        // --------------------------------------
+
         if (parsedUser.role === "owner") {
-          navigate("/owner-dashboard", { replace: true });
+          navigate("/owner-dashboard", {
+            replace: true,
+          });
           return;
         }
 
         setUser(parsedUser);
 
-        // Fetch bookings
+        // --------------------------------------
+        // GET USER BOOKINGS
+        // --------------------------------------
+
         const response = await axios.get(
-          "http://localhost:5000/api/bookings/my",
+          `${API_URL}/api/bookings/my`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -48,27 +73,53 @@ function Dashboard() {
           }
         );
 
-        const data = Array.isArray(response.data)
+        const data = Array.isArray(
+          response.data
+        )
           ? response.data
           : response.data?.data || [];
 
-        console.log("SMARTPARK USER DASHBOARD");
-        console.log("USER:", parsedUser);
-        console.log("MY BOOKINGS:", data);
+        console.log(
+          "SMARTPARK USER DASHBOARD"
+        );
+
+        console.log(
+          "USER:",
+          parsedUser
+        );
+
+        console.log(
+          "MY BOOKINGS:",
+          data
+        );
 
         setBookings(data);
       } catch (error) {
-        console.error("DASHBOARD ERROR:", error);
+        console.error(
+          "DASHBOARD ERROR:",
+          error
+        );
 
-        // Invalid user data
+        // --------------------------------------
+        // TOKEN EXPIRED / INVALID
+        // --------------------------------------
+
         if (
           error?.response?.status === 401 ||
           error?.response?.status === 403
         ) {
-          localStorage.removeItem("user");
-          localStorage.removeItem("token");
+          localStorage.removeItem(
+            "user"
+          );
 
-          navigate("/login", { replace: true });
+          localStorage.removeItem(
+            "token"
+          );
+
+          navigate("/login", {
+            replace: true,
+          });
+
           return;
         }
 
@@ -79,31 +130,42 @@ function Dashboard() {
     };
 
     loadDashboard();
-  }, [navigate]);
+  }, [navigate, API_URL]);
 
   // ==========================================
   // CANCEL BOOKING
   // ==========================================
 
-  const cancelBooking = async (bookingId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to cancel this booking?"
-    );
+  const cancelBooking = async (
+    bookingId
+  ) => {
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to cancel this booking?"
+      );
 
     if (!confirmed) {
       return;
     }
 
     try {
-      const token = localStorage.getItem("token");
+      const token =
+        localStorage.getItem("token");
 
       if (!token) {
-        navigate("/login", { replace: true });
+        navigate("/login", {
+          replace: true,
+        });
+
         return;
       }
 
+      // --------------------------------------
+      // CANCEL BOOKING
+      // --------------------------------------
+
       await axios.put(
-        `http://localhost:5000/api/bookings/${bookingId}/cancel`,
+        `${API_URL}/api/bookings/${bookingId}/cancel`,
         {},
         {
           headers: {
@@ -112,25 +174,36 @@ function Dashboard() {
         }
       );
 
-      alert("Booking cancelled successfully.");
-
-      // Update booking list
-      const response = await axios.get(
-        "http://localhost:5000/api/bookings/my",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+      alert(
+        "Booking cancelled successfully."
       );
 
-      const data = Array.isArray(response.data)
+      // --------------------------------------
+      // REFRESH BOOKINGS
+      // --------------------------------------
+
+      const response =
+        await axios.get(
+          `${API_URL}/api/bookings/my`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+      const data = Array.isArray(
+        response.data
+      )
         ? response.data
         : response.data?.data || [];
 
       setBookings(data);
     } catch (error) {
-      console.error("CANCEL BOOKING ERROR:", error);
+      console.error(
+        "CANCEL BOOKING ERROR:",
+        error
+      );
 
       alert(
         error?.response?.data?.message ||
@@ -145,27 +218,24 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <>
-        <Navbar />
+      <div className="loading-page">
+        <div className="dashboard-loading">
 
-        <div className="loading-page">
-          <div className="dashboard-loading">
-
-            <div className="loading-circle">
-              P
-            </div>
-
-            <h2>
-              Loading Dashboard...
-            </h2>
-
-            <p>
-              Preparing your SmartPark experience.
-            </p>
-
+          <div className="loading-circle">
+            P
           </div>
+
+          <h2>
+            Loading Dashboard...
+          </h2>
+
+          <p>
+            Preparing your SmartPark
+            experience.
+          </p>
+
         </div>
-      </>
+      </div>
     );
   }
 
@@ -181,17 +251,19 @@ function Dashboard() {
   // BOOKING STATISTICS
   // ==========================================
 
-  const activeBookings = bookings.filter(
-    (booking) =>
-      booking.status === "Booked" ||
-      booking.status === "Confirmed" ||
-      booking.status === "Active"
-  ).length;
+  const activeBookings =
+    bookings.filter(
+      (booking) =>
+        booking.status === "Booked" ||
+        booking.status === "Confirmed" ||
+        booking.status === "Active"
+    ).length;
 
-  const cancelledBookings = bookings.filter(
-    (booking) =>
-      booking.status === "Cancelled"
-  ).length;
+  const cancelledBookings =
+    bookings.filter(
+      (booking) =>
+        booking.status === "Cancelled"
+    ).length;
 
   // ==========================================
   // DASHBOARD
@@ -218,15 +290,15 @@ function Dashboard() {
               </div>
 
               <h1>
-                Welcome,{" "}
+                Welcome{" "}
                 <span>
                   {user.name || "User"}
                 </span>
               </h1>
 
               <p>
-                Manage your parking reservations
-                from one place.
+                Manage your parking
+                reservations from one place.
               </p>
 
             </div>
@@ -234,7 +306,9 @@ function Dashboard() {
             <button
               type="button"
               className="dashboard-find-parking"
-              onClick={() => navigate("/map")}
+              onClick={() =>
+                navigate("/map")
+              }
             >
               <span>
                 Find Parking
@@ -263,7 +337,8 @@ function Dashboard() {
                   📖
                 </div>
 
-                <span className="stat-dot"></span>
+                <span className="stat-dot">
+                </span>
 
               </div>
 
@@ -287,7 +362,8 @@ function Dashboard() {
                   ✓
                 </div>
 
-                <span className="stat-dot"></span>
+                <span className="stat-dot">
+                </span>
 
               </div>
 
@@ -311,7 +387,8 @@ function Dashboard() {
                   ×
                 </div>
 
-                <span className="stat-dot"></span>
+                <span className="stat-dot">
+                </span>
 
               </div>
 
@@ -328,7 +405,7 @@ function Dashboard() {
           </section>
 
           {/* =====================================
-              BOOKINGS HEADER
+              BOOKINGS SECTION
           ===================================== */}
 
           <section>
@@ -348,11 +425,14 @@ function Dashboard() {
               </div>
 
               <span className="booking-count">
+
                 {bookings.length}{" "}
+
                 booking
                 {bookings.length !== 1
                   ? "s"
                   : ""}
+
               </span>
 
             </div>
@@ -398,126 +478,131 @@ function Dashboard() {
 
               <div className="booking-list">
 
-                {bookings.map((booking) => {
+                {bookings.map(
+                  (booking) => {
 
-                  const parking =
-                    booking.parkingId ||
-                    booking.parking ||
-                    {};
+                    const parking =
+                      booking.parkingId ||
+                      booking.parking ||
+                      {};
 
-                  const isCancelled =
-                    booking.status === "Cancelled";
+                    const isCancelled =
+                      booking.status ===
+                      "Cancelled";
 
-                  return (
-                    <article
-                      key={booking._id}
-                      className={`premium-booking-card ${
-                        isCancelled
-                          ? "cancelled-booking"
-                          : ""
-                      }`}
-                    >
+                    return (
+                      <article
+                        key={booking._id}
+                        className={`premium-booking-card ${
+                          isCancelled
+                            ? "cancelled-booking"
+                            : ""
+                        }`}
+                      >
 
-                      {/* ============================
-                          BOOKING INFORMATION
-                      ============================ */}
+                        {/* ============================
+                            BOOKING INFORMATION
+                        ============================ */}
 
-                      <div className="booking-main">
+                        <div className="booking-main">
 
-                        <div className="parking-mini-icon">
-                          P
+                          <div className="parking-mini-icon">
+                            P
+                          </div>
+
+                          <div className="booking-info">
+
+                            <div className="booking-title-row">
+
+                              <h3>
+                                {parking.name ||
+                                  "Parking Location"}
+                              </h3>
+
+                              <span
+                                className={
+                                  isCancelled
+                                    ? "status cancelled"
+                                    : "status active"
+                                }
+                              >
+                                {booking.status ||
+                                  "Booked"}
+                              </span>
+
+                            </div>
+
+                            <p className="booking-address">
+                              📍{" "}
+                              {parking.address ||
+                                "Address unavailable"}
+                            </p>
+
+                            <div className="booking-details">
+
+                              {booking.vehicleNumber && (
+                                <span>
+                                  🚗{" "}
+                                  {
+                                    booking.vehicleNumber
+                                  }
+                                </span>
+                              )}
+
+                              <span>
+                                💰 ₹
+                                {parking.pricePerHour ||
+                                  0}
+                                /hr
+                              </span>
+
+                            </div>
+
+                          </div>
+
                         </div>
 
-                        <div className="booking-info">
+                        {/* ============================
+                            BOOKING ACTIONS
+                        ============================ */}
 
-                          <div className="booking-title-row">
+                        <div className="booking-actions">
 
-                            <h3>
-                              {parking.name ||
-                                "Parking Location"}
-                            </h3>
+                          {booking.bookingDate && (
+                            <small>
+                              {new Date(
+                                booking.bookingDate
+                              ).toLocaleDateString(
+                                "en-IN",
+                                {
+                                  day: "2-digit",
+                                  month: "short",
+                                  year: "numeric",
+                                }
+                              )}
+                            </small>
+                          )}
 
-                            <span
-                              className={
-                                isCancelled
-                                  ? "status cancelled"
-                                  : "status active"
+                          {!isCancelled && (
+                            <button
+                              type="button"
+                              className="cancel-btn"
+                              onClick={() =>
+                                cancelBooking(
+                                  booking._id
+                                )
                               }
                             >
-                              {booking.status ||
-                                "Booked"}
-                            </span>
-
-                          </div>
-
-                          <p className="booking-address">
-                            📍{" "}
-                            {parking.address ||
-                              "Address unavailable"}
-                          </p>
-
-                          <div className="booking-details">
-
-                            {booking.vehicleNumber && (
-                              <span>
-                                {" "}
-                                {booking.vehicleNumber}
-                              </span>
-                            )}
-
-                            <span>
-                               ₹
-                              {parking.pricePerHour ||
-                                0}
-                              /hr
-                            </span>
-
-                          </div>
+                              Cancel Booking
+                            </button>
+                          )}
 
                         </div>
 
-                      </div>
-
-                      {/* ============================
-                          BOOKING ACTIONS
-                      ============================ */}
-
-                      <div className="booking-actions">
-
-                        {booking.bookingDate && (
-                          <small>
-                            {new Date(
-                              booking.bookingDate
-                            ).toLocaleDateString(
-                              "en-IN",
-                              {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              }
-                            )}
-                          </small>
-                        )}
-
-                        {!isCancelled && (
-                          <button
-                            type="button"
-                            className="cancel-btn"
-                            onClick={() =>
-                              cancelBooking(
-                                booking._id
-                              )
-                            }
-                          >
-                            Cancel Booking
-                          </button>
-                        )}
-
-                      </div>
-
-                    </article>
-                  );
-                })}
+                      </article>
+                    );
+                  }
+                )}
 
               </div>
             )}
