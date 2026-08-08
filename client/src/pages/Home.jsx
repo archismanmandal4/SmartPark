@@ -245,7 +245,7 @@ Park
 
 <div className="intro-word">
 
-SMART PARK
+Find Nearest Parking
 
 
 </div>
