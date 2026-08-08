@@ -157,3 +157,31 @@
         font-size: 12px;
     }
 }
+
+
+/* ==========================================
+   SMARTPARK NAVBAR
+========================================== */
+
+.navbar-links {
+    -ms-overflow-style: none;
+}
+
+.navbar-links::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    .navbar-links {
+        gap: 16px !important;
+        overflow-x: auto;
+        flex-shrink: 1;
+    }
+    .navbar-links a {
+        flex-shrink: 0;
+        font-size: 13px !important;
+    }
+}
