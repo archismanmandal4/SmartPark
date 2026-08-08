@@ -231,8 +231,8 @@
     text-align: center;
     min-height: 320px;
     padding: 45px 25px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px dashed #d7dee8;
+    background: rgba(128, 42, 42, 0.95);
+    border: 1px dashed #8c2929;
     border-radius: 20px;
     box-shadow: 0 8px 25px rgba(15, 23, 42, 0.04);
 }
@@ -245,14 +245,14 @@
     justify-content: center;
     margin-bottom: 18px;
     border-radius: 18px;
-    background: linear-gradient( 135deg, #eff6ff, #eef2ff);
+    background: linear-gradient( 135deg, #8f4e4e, #59658d);
     color: #2563eb;
     font-size: 28px;
 }
 
 .empty-bookings h3 {
     margin: 0 0 8px;
-    color: #dfe1e6;
+    color: #e2d1d1;
     font-size: 20px;
     font-weight: 800;
 }
@@ -276,7 +276,7 @@
     padding: 13px 20px;
     border-radius: 11px;
     background: linear-gradient( 135deg, #2563eb, #4f46e5);
-    color: white;
+    color: rgb(66, 18, 18);
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
@@ -315,7 +315,7 @@
     justify-content: space-between;
     gap: 25px;
     padding: 22px 24px;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(90, 31, 31, 0.95);
     border: 1px solid #e5e7eb;
     border-radius: 18px;
     box-shadow: 0 7px 25px rgba(15, 23, 42, 0.05);
@@ -425,7 +425,7 @@
 }
 
 .booking-details span {
-    color: #e7eaee;
+    color: #501111;
     font-size: 12px;
     font-weight: 600;
 }
@@ -518,7 +518,7 @@
     justify-content: center;
     margin-bottom: 20px;
     border-radius: 50%;
-    background: linear-gradient( 135deg, #2563eb, #4f46e5);
+    background: linear-gradient( 135deg, #67140c, #4f46e5);
     color: white;
     font-size: 22px;
     font-weight: 900;
@@ -528,7 +528,7 @@
 
 .dashboard-loading h2 {
     margin: 0 0 8px;
-    color: #111827;
+    color: #eeeff1;
     font-size: 22px;
 }
 

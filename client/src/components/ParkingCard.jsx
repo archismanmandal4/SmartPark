@@ -61,7 +61,7 @@ function ParkingCard({ parking, distance }) {
       <div className="chips">
 
         <span className="chip">
-          🚗 {parking.vehicleType || "Car/Bike"}
+           {parking.vehicleType || "Car/Bike"}
         </span>
 
         <span className="chip">
