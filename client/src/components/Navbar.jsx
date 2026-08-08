@@ -7,8 +7,6 @@ function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("token")
   );
@@ -25,227 +23,123 @@ function Navbar() {
     console.log("USER DATA ERROR:", error);
   }
 
-  // ==============================
-  // LOGOUT
-  // ==============================
-
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 
     setIsLoggedIn(false);
-    setMenuOpen(false);
 
     navigate("/");
-    window.location.reload();
   };
 
-  // ==============================
-  // CLOSE MOBILE MENU
-  // ==============================
-
-  const closeMenu = () => {
-    setMenuOpen(false);
+  const getLinkClass = (path) => {
+    return location.pathname === path
+      ? "navbar-link active"
+      : "navbar-link";
   };
 
   return (
     <nav className="smartpark-navbar">
+      <div className="navbar-inner">
 
-      {/* ==========================
-          LOGO
-      ========================== */}
-
-      <Link
-        to="/"
-        className="smartpark-logo"
-        onClick={closeMenu}
-      >
-        Smart<span>Park</span>
-      </Link>
-
-      {/* ==========================
-          DESKTOP NAVIGATION
-      ========================== */}
-
-      <div className="desktop-nav">
-
-        <Link
-          to="/"
-          className={location.pathname === "/" ? "active" : ""}
-        >
-          Home
+        {/* LOGO */}
+        <Link to="/" className="navbar-logo">
+          SmartPark
         </Link>
 
-        <Link
-          to="/map"
-          className={location.pathname === "/map" ? "active" : ""}
-        >
-          Map
-        </Link>
+        {/* NAVIGATION */}
+        <div className="navbar-links">
 
-        {isLoggedIn ? (
-          <>
-            <Link
-              to="/dashboard"
-              className={
-                location.pathname === "/dashboard"
-                  ? "active"
-                  : ""
-              }
-            >
-              Dashboard
-            </Link>
+          {/* HOME */}
+          <Link
+            to="/"
+            className={getLinkClass("/")}
+          >
+            Home
+          </Link>
 
-            {user?.role === "owner" && (
+          {/* MAP */}
+          <Link
+            to="/map"
+            className={getLinkClass("/map")}
+          >
+            Map
+          </Link>
+
+          {/* HOW IT WORKS */}
+          <a
+            href="/#how-it-works"
+            className="navbar-link"
+          >
+            How It Works
+          </a>
+
+          {/* LOGGED IN */}
+          {isLoggedIn ? (
+            <>
+              {/* DASHBOARD */}
               <Link
-                to="/add-parking"
-                className={
-                  location.pathname === "/add-parking"
-                    ? "active"
-                    : ""
-                }
+                to="/dashboard"
+                className={getLinkClass("/dashboard")}
               >
-                Add Parking
+                Dashboard
               </Link>
-            )}
 
-            <span className="navbar-user">
-              👋 {user?.name || "User"}
-            </span>
+              {/* OWNER */}
+              {user?.role === "owner" && (
+                <Link
+                  to="/add-parking"
+                  className={getLinkClass("/add-parking")}
+                >
+                  Add Parking
+                </Link>
+              )}
 
-            <button
-              className="navbar-book"
-              onClick={() => navigate("/map")}
-            >
-              Book a Slot
-            </button>
+              {/* USER NAME */}
+              <span className="navbar-user">
+                👋 {user?.name || "User"}
+              </span>
 
-            <button
-              className="navbar-logout"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              className={
-                location.pathname === "/login"
-                  ? "active"
-                  : ""
-              }
-            >
-              Login
-            </Link>
+              {/* BOOK SLOT */}
+              <button
+                type="button"
+                className="navbar-button"
+                onClick={() => navigate("/map")}
+              >
+                Book a Slot
+              </button>
 
-            <Link
-              to="/register"
-              className={
-                location.pathname === "/register"
-                  ? "active"
-                  : ""
-              }
-            >
-              Register
-            </Link>
-          </>
-        )}
-
-      </div>
-
-      {/* ==========================
-          MOBILE MENU BUTTON
-      ========================== */}
-
-      <button
-        className="mobile-menu-button"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label="Toggle navigation menu"
-      >
-        <span className={menuOpen ? "open" : ""}></span>
-        <span className={menuOpen ? "open" : ""}></span>
-        <span className={menuOpen ? "open" : ""}></span>
-      </button>
-
-      {/* ==========================
-          MOBILE NAVIGATION
-      ========================== */}
-
-      <div
-        className={`mobile-nav ${
-          menuOpen ? "mobile-nav-open" : ""
-        }`}
-      >
-
-        <Link to="/" onClick={closeMenu}>
-          Home
-        </Link>
-
-        <Link to="/map" onClick={closeMenu}>
-          Map
-        </Link>
-
-        {isLoggedIn ? (
-          <>
-            <Link
-              to="/dashboard"
-              onClick={closeMenu}
-            >
-              Dashboard
-            </Link>
-
-            {user?.role === "owner" && (
+              {/* LOGOUT */}
+              <button
+                type="button"
+                className="navbar-button navbar-logout"
+                onClick={handleLogout}
+              >
+                ↪ Logout
+              </button>
+            </>
+          ) : (
+            <>
+              {/* LOGIN */}
               <Link
-                to="/add-parking"
-                onClick={closeMenu}
+                to="/login"
+                className={getLinkClass("/login")}
               >
-                Add Parking
+                Login
               </Link>
-            )}
 
-            <div className="mobile-user">
-              👋 {user?.name || "User"}
-            </div>
+              {/* REGISTER */}
+              <Link
+                to="/register"
+                className={getLinkClass("/register")}
+              >
+                Register
+              </Link>
+            </>
+          )}
 
-            <button
-              className="mobile-book"
-              onClick={() => {
-                closeMenu();
-                navigate("/map");
-              }}
-            >
-              Book a Slot
-            </button>
-
-            <button
-              className="mobile-logout"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/login"
-              onClick={closeMenu}
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/register"
-              onClick={closeMenu}
-            >
-              Register
-            </Link>
-          </>
-        )}
-
+        </div>
       </div>
-
     </nav>
   );
 }

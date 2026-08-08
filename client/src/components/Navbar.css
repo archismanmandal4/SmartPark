@@ -1,279 +1,159 @@
-/* ==========================================
+/* =========================================
    SMARTPARK NAVBAR
-========================================== */
+========================================= */
 
 .smartpark-navbar {
     width: 100%;
-    min-height: 70px;
-    padding: 0 50px;
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 16px 50px;
     background: rgba(45, 10, 15, 0.97);
     color: white;
     position: sticky;
     top: 0;
     z-index: 1000;
-    border-bottom: 1px solid rgba(212, 163, 115, 0.15);
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(212, 163, 115, 0.15);
 }
 
+.navbar-inner {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
 
-/* ==========================================
-   LOGO
-========================================== */
-
-.smartpark-logo {
+.navbar-logo {
     color: white;
     text-decoration: none;
     font-size: 27px;
     font-weight: 800;
-    letter-spacing: -0.8px;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
-.smartpark-logo span {
-    color: #ee526d;
-}
-
-
-/* ==========================================
-   DESKTOP NAV
-========================================== */
-
-.desktop-nav {
+.navbar-links {
     display: flex;
     align-items: center;
-    gap: 24px;
-    white-space: nowrap;
+    justify-content: flex-end;
+    gap: 22px;
+    flex-wrap: wrap;
 }
 
-.desktop-nav a {
-    color: #ffffff;
+.navbar-link {
+    color: white;
     text-decoration: none;
-    font-size: 15px;
     font-weight: 600;
-    transition: color 0.25s ease;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: color 0.2s ease;
 }
 
-.desktop-nav a:hover,
-.desktop-nav a.active {
-    color: #ee526d;
+.navbar-link:hover {
+    color: #d4a373;
 }
 
-
-/* ==========================================
-   USER
-========================================== */
+.navbar-link.active {
+    color: #d4a373;
+}
 
 .navbar-user {
-    padding: 8px 13px;
-    border-radius: 20px;
     background: rgba(212, 163, 115, 0.12);
     border: 1px solid rgba(212, 163, 115, 0.25);
-    color: #f5d0a9;
-    font-size: 14px;
+    padding: 8px 13px;
+    border-radius: 20px;
     font-weight: 600;
+    color: #f5d0a9;
     white-space: nowrap;
 }
 
-
-/* ==========================================
-   BOOK BUTTON
-========================================== */
-
-.navbar-book {
-    padding: 10px 17px;
+.navbar-button {
+    padding: 9px 16px;
     border: 1px solid rgba(255, 112, 135, 0.35);
     border-radius: 10px;
-    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    background: linear-gradient(135deg, #a51e3d, #7f1530);
     color: white;
     cursor: pointer;
-    font-size: 14px;
     font-weight: 700;
+    font-size: 14px;
     white-space: nowrap;
-    transition: transform 0.2s ease;
 }
-
-.navbar-book:hover {
-    transform: translateY(-2px);
-}
-
-
-/* ==========================================
-   LOGOUT
-========================================== */
 
 .navbar-logout {
-    padding: 9px 17px;
-    border: 1px solid rgba(255, 112, 135, 0.35);
-    border-radius: 10px;
-    background: linear-gradient( 135deg, #7f1530, #5d1025);
-    color: white;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
+    background: linear-gradient(135deg, #7f1530, #5d1025);
 }
 
 
-/* ==========================================
-   MOBILE BUTTON
-========================================== */
-
-.mobile-menu-button {
-    display: none;
-    width: 44px;
-    height: 44px;
-    border: none;
-    background: transparent;
-    cursor: pointer;
-    padding: 8px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.mobile-menu-button span {
-    width: 24px;
-    height: 2px;
-    border-radius: 5px;
-    background: white;
-    transition: 0.25s ease;
-}
-
-
-/* ==========================================
-   MOBILE NAV
-========================================== */
-
-.mobile-nav {
-    display: none;
-}
-
-
-/* ==========================================
+/* =========================================
    TABLET
-========================================== */
+========================================= */
 
-@media (max-width: 1050px) {
+@media (max-width: 1000px) {
     .smartpark-navbar {
-        padding: 0 25px;
+        padding: 15px 25px;
     }
-    .desktop-nav {
-        gap: 16px;
+    .navbar-inner {
+        align-items: flex-start;
     }
-    .desktop-nav a {
-        font-size: 14px;
+    .navbar-links {
+        gap: 15px;
     }
 }
 
 
-/* ==========================================
+/* =========================================
    MOBILE
-========================================== */
+========================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
     .smartpark-navbar {
-        min-height: 64px;
-        padding: 0 16px;
-        position: sticky;
+        padding: 14px 16px;
     }
-    /* Hide desktop navigation */
-    .desktop-nav {
-        display: none;
-    }
-    /* Show hamburger */
-    .mobile-menu-button {
-        display: flex;
-    }
-    /* Mobile dropdown */
-    .mobile-nav {
-        position: absolute;
-        top: 64px;
-        left: 0;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 15px;
-        display: flex;
+    .navbar-inner {
         flex-direction: column;
-        gap: 5px;
-        background: rgba(45, 10, 15, 0.98);
-        border-top: 1px solid rgba( 255, 255, 255, 0.06);
-        box-shadow: 0 15px 30px rgba( 0, 0, 0, 0.35);
-        transform: translateY(-10px);
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
-        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+        align-items: center;
+        gap: 12px;
     }
-    .mobile-nav-open {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
+    .navbar-logo {
+        font-size: 25px;
     }
-    .mobile-nav a {
+    .navbar-links {
         width: 100%;
-        box-sizing: border-box;
-        padding: 14px 15px;
-        border-radius: 10px;
-        color: white;
-        text-decoration: none;
-        font-size: 15px;
-        font-weight: 600;
+        justify-content: center;
+        gap: 10px 16px;
     }
-    .mobile-nav a:hover {
-        background: rgba( 238, 82, 109, 0.10);
-        color: #ee526d;
-    }
-    /* User */
-    .mobile-user {
-        margin: 8px 0;
-        padding: 12px 15px;
-        border-radius: 10px;
-        background: rgba( 212, 163, 115, 0.10);
-        border: 1px solid rgba( 212, 163, 115, 0.20);
-        color: #f5d0a9;
+    .navbar-link {
         font-size: 14px;
-        font-weight: 600;
     }
-    /* Mobile buttons */
-    .mobile-book,
-    .mobile-logout {
-        width: 100%;
-        padding: 13px;
-        border-radius: 10px;
-        font-size: 14px;
-        font-weight: 700;
-        cursor: pointer;
+    .navbar-user {
+        font-size: 13px;
+        padding: 7px 11px;
     }
-    .mobile-book {
-        margin-top: 5px;
-        border: none;
-        background: linear-gradient( 135deg, #a51e3d, #7f1530);
-        color: white;
-    }
-    .mobile-logout {
-        border: 1px solid rgba( 255, 112, 135, 0.30);
-        background: rgba( 127, 21, 48, 0.35);
-        color: white;
+    .navbar-button {
+        font-size: 13px;
+        padding: 8px 13px;
     }
 }
 
 
-/* ==========================================
+/* =========================================
    SMALL PHONES
-========================================== */
+========================================= */
 
-@media (max-width: 380px) {
-    .smartpark-navbar {
-        padding: 0 12px;
+@media (max-width: 400px) {
+    .navbar-links {
+        gap: 9px 12px;
     }
-    .smartpark-logo {
+    .navbar-link {
+        font-size: 13px;
+    }
+    .navbar-logo {
         font-size: 23px;
+    }
+    .navbar-button {
+        padding: 7px 10px;
+        font-size: 12px;
     }
 }
