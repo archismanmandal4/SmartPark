@@ -1,0 +1,484 @@
+/* =========================================
+   SMARTPARK REGISTER PAGE
+========================================= */
+
+.register-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px 30px;
+    background: radial-gradient( circle at 15% 20%, rgba(151, 25, 55, 0.22), transparent 35%), radial-gradient( circle at 85% 80%, rgba(113, 17, 40, 0.25), transparent 38%), linear-gradient( 135deg, #160508, #2a080f 45%, #110306);
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   BACKGROUND
+========================================= */
+
+.register-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+/* Glowing circles */
+
+.register-glow {
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.25;
+    animation: registerFloat 9s ease-in-out infinite;
+}
+
+.register-glow-one {
+    top: -180px;
+    left: -120px;
+    background: #9d2947;
+}
+
+.register-glow-two {
+    right: -160px;
+    bottom: -180px;
+    background: #7d1836;
+    animation-delay: -4s;
+}
+
+
+/* =========================================
+   BACKGROUND GRID
+========================================= */
+
+.register-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    background-image: linear-gradient( rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient( 90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 55px 55px;
+    mask-image: linear-gradient( to bottom, black, transparent 90%);
+}
+
+
+/* =========================================
+   ORBITS
+========================================= */
+
+.register-orbit {
+    position: absolute;
+    border: 1px solid rgba(238, 82, 109, 0.12);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+}
+
+.orbit-one {
+    width: 600px;
+    height: 220px;
+    top: 8%;
+    right: -220px;
+}
+
+.orbit-two {
+    width: 500px;
+    height: 180px;
+    bottom: 4%;
+    left: -200px;
+    transform: rotate(25deg);
+}
+
+
+/* =========================================
+   MAIN CONTAINER
+========================================= */
+
+.register-container {
+    position: relative;
+    z-index: 2;
+    width: min(1050px, 100%);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 430px;
+    overflow: hidden;
+    border-radius: 26px;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 35px 90px rgba(0, 0, 0, 0.48);
+    backdrop-filter: blur(22px);
+}
+
+
+/* =========================================
+   BRAND PANEL
+========================================= */
+
+.register-brand-panel {
+    padding: 65px 55px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient( 145deg, rgba(116, 17, 38, 0.32), rgba(30, 5, 10, 0.16));
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.register-brand {
+    font-size: 29px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.register-brand span {
+    color: #ffffff;
+}
+
+.register-brand strong {
+    color: #ee526d;
+}
+
+.brand-line {
+    width: 45px;
+    height: 3px;
+    margin: 24px 0 28px;
+    border-radius: 10px;
+    background: linear-gradient( 90deg, #ee526d, transparent);
+}
+
+.register-brand-panel h1 {
+    margin: 0;
+    max-width: 500px;
+    color: #ffffff;
+    font-size: clamp(38px, 4vw, 58px);
+    line-height: 1.05;
+    letter-spacing: -2px;
+}
+
+.register-brand-panel h1 span {
+    color: #ee526d;
+}
+
+.register-brand-panel>p {
+    max-width: 500px;
+    margin: 24px 0 40px;
+    color: rgba(255, 255, 255, 0.62);
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+
+/* =========================================
+   FEATURES
+========================================= */
+
+.register-features {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.register-feature {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.feature-number {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(238, 82, 109, 0.25);
+    background: rgba(238, 82, 109, 0.08);
+    color: #ee526d;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.register-feature strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.register-feature span {
+    display: block;
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 12px;
+}
+
+
+/* =========================================
+   REGISTER CARD
+========================================= */
+
+.register-card {
+    padding: 48px 42px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #2a080f;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.register-card-header {
+    margin-bottom: 28px;
+}
+
+.register-label {
+    margin-bottom: 9px;
+    color: #a52b48;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.register-card-header h2 {
+    margin: 0;
+    color: #310b13;
+    font-size: 30px;
+    letter-spacing: -0.8px;
+}
+
+.register-card-header p {
+    margin: 8px 0 0;
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* =========================================
+   FORM FIELDS
+========================================= */
+
+.register-field {
+    margin-bottom: 18px;
+}
+
+.register-field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #42131d;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.register-field input {
+    width: 100%;
+    height: 45px;
+    padding: 0 13px;
+    box-sizing: border-box;
+    border: 1px solid #ded5d7;
+    border-radius: 9px;
+    outline: none;
+    background: #ffffff;
+    color: #301018;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-field input::placeholder {
+    color: #aaa;
+}
+
+.register-field input:focus {
+    border-color: #b53a56;
+    box-shadow: 0 0 0 3px rgba(181, 58, 86, 0.09);
+}
+
+.password-hint {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+    font-size: 10px;
+}
+
+
+/* =========================================
+   ROLE OPTIONS
+========================================= */
+
+.role-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+}
+
+.role-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px;
+    border: 1px solid #e1d9db;
+    border-radius: 9px;
+    background: #ffffff;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.role-option:hover {
+    border-color: #c35a70;
+}
+
+.role-option.active {
+    border-color: #a92e4b;
+    background: rgba(169, 46, 75, 0.055);
+}
+
+.role-radio {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+    border: 2px solid #c8bdc0;
+    border-radius: 50%;
+}
+
+.role-option.active .role-radio {
+    border-color: #a92e4b;
+    box-shadow: inset 0 0 0 3px #ffffff;
+    background: #a92e4b;
+}
+
+.role-option strong {
+    display: block;
+    color: #3a111a;
+    font-size: 12px;
+}
+
+.role-option small {
+    display: block;
+    margin-top: 2px;
+    color: #999;
+    font-size: 9px;
+}
+
+
+/* =========================================
+   REGISTER BUTTON
+========================================= */
+
+.register-button {
+    width: 100%;
+    height: 48px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 112, 135, 0.3);
+    border-radius: 10px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 9px 25px rgba(112, 13, 37, 0.25);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.register-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 13px 30px rgba(112, 13, 37, 0.35);
+}
+
+.register-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.register-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.register-arrow {
+    font-size: 19px;
+    transition: transform 0.25s ease;
+}
+
+.register-button:hover .register-arrow {
+    transform: translateX(4px);
+}
+
+
+/* =========================================
+   LOGIN LINK
+========================================= */
+
+.register-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 22px;
+    font-size: 12px;
+    color: #888;
+}
+
+.register-login button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: #9e2947;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.register-login button:hover {
+    color: #6f142c;
+    text-decoration: underline;
+}
+
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes registerFloat {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+    50% {
+        transform: translate3d(30px, 25px, 0);
+    }
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+    .register-container {
+        grid-template-columns: 1fr;
+    }
+    .register-brand-panel {
+        display: none;
+    }
+    .register-card {
+        padding: 40px 30px;
+    }
+}
+
+@media (max-width: 500px) {
+    .register-page {
+        padding: 20px 12px;
+    }
+    .register-card {
+        padding: 32px 22px;
+    }
+    .role-options {
+        grid-template-columns: 1fr;
+    }
+}

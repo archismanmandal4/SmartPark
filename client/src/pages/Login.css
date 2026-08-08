@@ -1,0 +1,386 @@
+/* ==========================================
+   LOGIN PAGE
+========================================== */
+
+.login-page {
+    position: relative;
+    min-height: calc(100vh - 70px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient( circle at 15% 20%, rgba(165, 30, 61, 0.22), transparent 32%), radial-gradient( circle at 85% 75%, rgba(127, 21, 48, 0.25), transparent 35%), linear-gradient( 135deg, #21070d, #350b14 45%, #19050a);
+    padding: 60px 20px;
+}
+
+
+/* ==========================================
+   BACKGROUND
+========================================== */
+
+.login-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+
+/* ==========================================
+   GLOW EFFECTS
+========================================== */
+
+.login-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.35;
+    animation: glowMove 9s ease-in-out infinite alternate;
+}
+
+.glow-one {
+    width: 380px;
+    height: 380px;
+    top: -160px;
+    left: -100px;
+    background: #a51e3d;
+}
+
+.glow-two {
+    width: 320px;
+    height: 320px;
+    right: -100px;
+    bottom: -100px;
+    background: #7f1530;
+    animation-delay: 2s;
+}
+
+.glow-three {
+    width: 220px;
+    height: 220px;
+    top: 45%;
+    left: 48%;
+    background: #c52b50;
+    opacity: 0.12;
+    animation-delay: 4s;
+}
+
+@keyframes glowMove {
+    0% {
+        transform: translate3d( -20px, -10px, 0) scale(1);
+    }
+    50% {
+        transform: translate3d( 30px, 20px, 0) scale(1.08);
+    }
+    100% {
+        transform: translate3d( -10px, 35px, 0) scale(0.95);
+    }
+}
+
+
+/* ==========================================
+   GRID
+========================================== */
+
+.login-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    background-image: linear-gradient( rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient( 90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 55px 55px;
+    mask-image: radial-gradient( ellipse at center, black 10%, transparent 75%);
+}
+
+
+/* ==========================================
+   MOVING LIGHT LINES
+========================================== */
+
+.floating-line {
+    position: absolute;
+    height: 1px;
+    width: 420px;
+    background: linear-gradient( 90deg, transparent, rgba(238, 82, 109, 0.5), transparent);
+    opacity: 0.45;
+    transform: rotate(-25deg);
+    animation: lineMove 8s linear infinite;
+}
+
+.line-one {
+    top: 20%;
+    left: -450px;
+}
+
+.line-two {
+    bottom: 25%;
+    left: -450px;
+    animation-delay: 4s;
+}
+
+@keyframes lineMove {
+    0% {
+        transform: translateX(0) rotate(-25deg);
+    }
+    100% {
+        transform: translateX(150vw) rotate(-25deg);
+    }
+}
+
+
+/* ==========================================
+   CONTENT
+========================================== */
+
+.login-content {
+    position: relative;
+    z-index: 5;
+    width: 100%;
+    max-width: 430px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+/* ==========================================
+   BRAND
+========================================== */
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    color: white;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.login-brand span {
+    color: #ffffff;
+}
+
+.login-brand strong {
+    color: #ee526d;
+}
+
+.brand-mark {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: white;
+    font-size: 19px;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(165, 30, 61, 0.4);
+}
+
+
+/* ==========================================
+   LOGIN CARD
+========================================== */
+
+.login-card {
+    width: 100%;
+    padding: 38px;
+    border-radius: 24px;
+    background: linear-gradient( 145deg, rgba(255, 255, 255, 0.97), rgba(250, 241, 242, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(20px);
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.login-card-header {
+    margin-bottom: 30px;
+}
+
+.login-label {
+    color: #a51e3d;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.login-card-header h1 {
+    margin: 0 0 10px;
+    color: #2d0a0f;
+    font-size: 34px;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.login-card-header p {
+    margin: 0;
+    color: #76676a;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   INPUT FIELD
+========================================== */
+
+.login-field {
+    margin-bottom: 19px;
+}
+
+.login-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #44252a;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.login-field input {
+    width: 100%;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0 14px;
+    border: 1px solid #dfd0d2;
+    border-radius: 10px;
+    outline: none;
+    background: rgba(255, 255, 255, 0.85);
+    color: #2d0a0f;
+    font-size: 14px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.login-field input::placeholder {
+    color: #a69a9d;
+}
+
+.login-field input:focus {
+    border-color: #a51e3d;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(165, 30, 61, 0.09);
+}
+
+
+/* ==========================================
+   LOGIN BUTTON
+========================================== */
+
+.login-submit {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: white;
+    font-size: 15px;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(127, 21, 48, 0.32);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.login-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 35px rgba(127, 21, 48, 0.42);
+}
+
+.login-submit:active {
+    transform: translateY(0);
+}
+
+.login-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.login-arrow {
+    font-size: 19px;
+    transition: transform 0.25s ease;
+}
+
+.login-submit:hover .login-arrow {
+    transform: translateX(4px);
+}
+
+
+/* ==========================================
+   REGISTER
+========================================== */
+
+.login-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin-top: 24px;
+    font-size: 13px;
+    color: #817477;
+}
+
+.login-register button {
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: #a51e3d;
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+}
+
+.login-register button:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   SECURITY FOOTER
+========================================== */
+
+.login-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 11px;
+    letter-spacing: 0.3px;
+}
+
+.security-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ee526d;
+    box-shadow: 0 0 10px rgba(238, 82, 109, 0.8);
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 600px) {
+    .login-page {
+        padding: 40px 16px;
+    }
+    .login-card {
+        padding: 28px 22px;
+    }
+    .login-card-header h1 {
+        font-size: 29px;
+    }
+}

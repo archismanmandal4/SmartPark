@@ -1,0 +1,301 @@
+/* ==========================================
+   SMARTPARK MAP PAGE
+========================================== */
+
+.parking-map-page {
+    min-height: calc(100vh - 70px);
+    padding: 40px;
+    box-sizing: border-box;
+    color: #ffffff;
+    background: radial-gradient( circle at 10% 10%, rgba(165, 30, 61, 0.20), transparent 30%), radial-gradient( circle at 90% 80%, rgba(127, 21, 48, 0.20), transparent 32%), linear-gradient( 135deg, #21070d, #350b14 48%, #19050a);
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.parking-map-header {
+    max-width: 1450px;
+    margin: 0 auto 30px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.parking-map-eyebrow {
+    color: #ee526d;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.parking-map-header h1 {
+    margin: 0 0 10px;
+    font-size: clamp( 32px, 4vw, 48px);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+}
+
+.parking-map-header h1 span {
+    color: #ee526d;
+}
+
+.parking-map-header p {
+    margin: 0;
+    max-width: 620px;
+    color: #c6abad;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   LIVE STATUS
+========================================== */
+
+.parking-live-status {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: #eadbdd;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.parking-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 12px rgba(74, 222, 128, 0.9);
+    animation: mapLivePulse 1.8s infinite;
+}
+
+@keyframes mapLivePulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.35);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
+/* ==========================================
+   MAIN LAYOUT
+========================================== */
+
+.parking-map-layout {
+    max-width: 1450px;
+    height: calc(100vh - 245px);
+    min-height: 550px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 20px;
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.parking-sidebar {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 20px;
+    background: rgba(28, 7, 13, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.30);
+    backdrop-filter: blur(18px);
+}
+
+
+/* ==========================================
+   SIDEBAR HEADER
+========================================== */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.sidebar-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #ee526d;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 19px;
+    letter-spacing: -0.3px;
+}
+
+.parking-count {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    box-shadow: 0 7px 18px rgba(127, 21, 48, 0.35);
+}
+
+
+/* ==========================================
+   PARKING LIST
+========================================== */
+
+.parking-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+
+/* Scrollbar */
+
+.parking-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.parking-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.parking-list::-webkit-scrollbar-thumb {
+    background: rgba(238, 82, 109, 0.35);
+    border-radius: 10px;
+}
+
+
+/* ==========================================
+   MAP CONTAINER
+========================================== */
+
+.map-container {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+    border-radius: 20px;
+    background: #28090f;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+
+/*
+   Makes sure the actual MapView
+   fills the entire map area.
+*/
+
+.map-container>* {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* ==========================================
+   NO PARKING
+========================================== */
+
+.no-parking {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 25px;
+    color: #ffffff;
+}
+
+.no-parking-icon {
+    width: 58px;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 17px;
+    border-radius: 16px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: white;
+    font-size: 25px;
+    font-weight: 800;
+    box-shadow: 0 10px 30px rgba(127, 21, 48, 0.35);
+}
+
+.no-parking h3 {
+    margin: 0 0 8px;
+    font-size: 18px;
+}
+
+.no-parking p {
+    margin: 0;
+    color: #a99599;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 950px) {
+    .parking-map-page {
+        padding: 25px 18px;
+    }
+    .parking-map-layout {
+        grid-template-columns: 300px 1fr;
+    }
+}
+
+@media (max-width: 750px) {
+    .parking-map-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .parking-live-status {
+        align-self: flex-start;
+    }
+    .parking-map-layout {
+        height: auto;
+        min-height: 0;
+        grid-template-columns: 1fr;
+    }
+    .parking-sidebar {
+        max-height: 420px;
+    }
+    .map-container {
+        height: 500px;
+    }
+}

@@ -1,0 +1,570 @@
+/* ==========================================
+   SMARTPARK - ADD PARKING
+========================================== */
+
+.add-parking-page {
+    position: relative;
+    min-height: calc(100vh - 70px);
+    padding: 55px 6% 70px;
+    background: radial-gradient( circle at 10% 10%, rgba(238, 82, 109, 0.16), transparent 32%), radial-gradient( circle at 90% 20%, rgba(124, 58, 237, 0.13), transparent 30%), linear-gradient( 135deg, #07040b, #16070d 45%, #09030a);
+    color: #ffffff;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   BACKGROUND GLOWS
+========================================== */
+
+.add-parking-glow {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+    opacity: 0.16;
+}
+
+.glow-left {
+    top: 180px;
+    left: -160px;
+    background: #c92f50;
+}
+
+.glow-right {
+    right: -160px;
+    bottom: 100px;
+    background: #7135c9;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.add-parking-header {
+    position: relative;
+    max-width: 1100px;
+    margin: 0 auto 38px;
+    z-index: 2;
+}
+
+.add-parking-eyebrow {
+    margin-bottom: 12px;
+    color: #d994a3;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.add-parking-header h1 {
+    margin: 0;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.add-parking-header h1 span {
+    color: #ee526d;
+    text-shadow: 0 0 25px rgba(238, 82, 109, 0.22);
+}
+
+.add-parking-header p {
+    max-width: 650px;
+    margin: 18px 0 0;
+    color: rgba(255, 255, 255, 0.58);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* ==========================================
+   FORM CARD
+========================================== */
+
+.add-parking-card {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 34px;
+    border-radius: 22px;
+    background: linear-gradient( 145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   FORM SECTION
+========================================== */
+
+.form-section {
+    padding: 5px 0 32px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.form-section:last-of-type {
+    margin-bottom: 0;
+    border-bottom: none;
+}
+
+
+/* ==========================================
+   SECTION HEADING
+========================================== */
+
+.form-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 25px;
+}
+
+.section-number {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: linear-gradient( 135deg, #9c2946, #611326);
+    border: 1px solid rgba(255, 140, 160, 0.2);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    box-shadow: 0 8px 22px rgba(126, 20, 46, 0.25);
+}
+
+.form-section-heading h2 {
+    margin: 0 0 5px;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 750;
+}
+
+.form-section-heading p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   FORM GRID
+========================================== */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+
+/* ==========================================
+   FORM FIELD
+========================================== */
+
+.form-field {
+    min-width: 0;
+}
+
+.form-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.3px;
+}
+
+.form-field label span {
+    margin-left: 3px;
+    color: #ee526d;
+}
+
+
+/* ==========================================
+   INPUTS
+========================================== */
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    outline: none;
+    background: rgba(0, 0, 0, 0.22);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.form-field input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.form-field input:hover,
+.form-field select:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.form-field input:focus,
+.form-field select:focus {
+    border-color: rgba(238, 82, 109, 0.65);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 3px rgba(238, 82, 109, 0.08);
+}
+
+.form-field select {
+    cursor: pointer;
+}
+
+.form-field select option {
+    background: #17070d;
+    color: #ffffff;
+}
+
+.form-field small {
+    display: block;
+    margin-top: 7px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   RUPEE INPUT
+========================================== */
+
+.input-with-prefix {
+    position: relative;
+}
+
+.input-with-prefix>span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ee526d;
+    font-size: 15px;
+    font-weight: 700;
+    z-index: 1;
+}
+
+.input-with-prefix input {
+    padding-left: 32px;
+}
+
+
+/* ==========================================
+   COORDINATE INFO
+========================================== */
+
+.coordinates-info {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: rgba(238, 82, 109, 0.045);
+    border: 1px solid rgba(238, 82, 109, 0.1);
+}
+
+.coordinate-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(238, 82, 109, 0.12);
+    color: #ee526d;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.coordinates-info strong {
+    display: block;
+    margin-bottom: 3px;
+    color: #f4e6e8;
+    font-size: 12px;
+}
+
+.coordinates-info p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* ==========================================
+   CAPACITY BOX
+========================================== */
+
+.capacity-box {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 20px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.capacity-icon {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient( 135deg, #9b2945, #5e1225);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 800;
+    box-shadow: 0 10px 25px rgba(126, 20, 46, 0.25);
+}
+
+.capacity-content {
+    flex: 1;
+}
+
+.capacity-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.capacity-content label span {
+    color: #ee526d;
+    margin-left: 3px;
+}
+
+.capacity-content input {
+    width: 100%;
+    max-width: 280px;
+    height: 44px;
+    padding: 0 13px;
+    border-radius: 9px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.22);
+    color: #ffffff;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+.capacity-content input:focus {
+    border-color: rgba(238, 82, 109, 0.65);
+    box-shadow: 0 0 0 3px rgba(238, 82, 109, 0.08);
+}
+
+.capacity-content p {
+    margin: 7px 0 0;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+}
+
+
+/* ==========================================
+   ACTIONS
+========================================== */
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding-top: 28px;
+}
+
+
+/* ==========================================
+   BACK BUTTON
+========================================== */
+
+.back-button {
+    height: 46px;
+    padding: 0 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.65);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   ADD BUTTON
+========================================== */
+
+.add-parking-button {
+    min-width: 230px;
+    height: 48px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient( 100deg, #8f2541, #c83e5c);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 12px 28px rgba(126, 20, 46, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+}
+
+.add-parking-button span {
+    font-size: 17px;
+    transition: transform 0.25s ease;
+}
+
+.add-parking-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 16px 35px rgba(126, 20, 46, 0.42);
+}
+
+.add-parking-button:hover:not(:disabled) span {
+    transform: translateX(4px);
+}
+
+.add-parking-button:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+
+/* ==========================================
+   LOADING SPINNER
+========================================== */
+
+.button-spinner {
+    width: 15px;
+    height: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: addParkingSpin 0.7s linear infinite;
+}
+
+@keyframes addParkingSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.add-parking-footer {
+    position: relative;
+    z-index: 2;
+    max-width: 1100px;
+    margin: 20px auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 10px;
+    text-align: center;
+}
+
+.footer-dot {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #50d890;
+    box-shadow: 0 0 9px rgba(80, 216, 144, 0.6);
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 700px) {
+    .add-parking-page {
+        padding: 35px 18px 50px;
+    }
+    .add-parking-header {
+        margin-bottom: 28px;
+    }
+    .add-parking-header h1 {
+        font-size: 40px;
+        letter-spacing: -1.5px;
+    }
+    .add-parking-card {
+        padding: 23px 18px;
+        border-radius: 18px;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+    .full-width {
+        grid-column: auto;
+    }
+    .capacity-box {
+        align-items: flex-start;
+        padding: 16px;
+    }
+    .capacity-icon {
+        width: 42px;
+        height: 42px;
+    }
+    .form-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+    .back-button,
+    .add-parking-button {
+        width: 100%;
+    }
+    .add-parking-footer {
+        line-height: 1.5;
+    }
+}

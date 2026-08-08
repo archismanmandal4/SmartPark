@@ -1,0 +1,261 @@
+/* ==========================================
+   SMARTPARK BOOKING PAGE
+========================================== */
+
+.booking-page {
+    min-height: calc(100vh - 70px);
+    padding: 60px 20px 80px;
+    background: radial-gradient( circle at 15% 15%, rgba(238, 82, 109, 0.16), transparent 30%), radial-gradient( circle at 85% 80%, rgba(126, 20, 46, 0.18), transparent 35%), linear-gradient( 135deg, #120306, #26090f 50%, #100205);
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   CONTAINER
+========================================== */
+
+.booking-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.booking-header {
+    margin-bottom: 30px;
+}
+
+.booking-eyebrow {
+    margin-bottom: 10px;
+    color: #d996a5;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+.booking-header h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: clamp(34px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.booking-header h1 span {
+    color: #ee526d;
+}
+
+.booking-header p {
+    margin-top: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   BOOKING CARD
+========================================== */
+
+.booking-form-card {
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient( 145deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(18px);
+}
+
+
+/* ==========================================
+   PARKING INFO
+========================================== */
+
+.booking-parking-info {
+    margin-bottom: 28px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.booking-parking-info h2 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 23px;
+}
+
+.booking-parking-info p {
+    margin: 5px 0;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   FORM
+========================================== */
+
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.booking-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.booking-field label {
+    color: #e9d9dc;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.booking-field input,
+.booking-field select {
+    width: 100%;
+    padding: 13px 14px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.booking-field input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.booking-field input:focus,
+.booking-field select:focus {
+    border-color: rgba(238, 82, 109, 0.65);
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 0 3px rgba(238, 82, 109, 0.08);
+}
+
+.booking-field select option {
+    background: #26090f;
+    color: #ffffff;
+}
+
+
+/* ==========================================
+   BOOK BUTTON
+========================================== */
+
+.confirm-booking-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient( 135deg, #a51e3d, #7f1530);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(126, 20, 46, 0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.confirm-booking-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 38px rgba(194, 32, 65, 0.4);
+}
+
+.confirm-booking-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.booking-error {
+    padding: 12px 14px;
+    border-radius: 9px;
+    background: rgba(238, 82, 109, 0.08);
+    border: 1px solid rgba(238, 82, 109, 0.2);
+    color: #f29aaa;
+    font-size: 13px;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+    .booking-page {
+        padding: 35px 15px 60px;
+    }
+    .booking-form-card {
+        padding: 22px;
+    }
+    .booking-header h1 {
+        font-size: 35px;
+    }
+}
+
+
+/* =========================================
+   SMARTPARK - BACK TO MAP BUTTON
+========================================= */
+
+.back-map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 10px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.back-map-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 7px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-size: 17px;
+    font-weight: 800;
+    transition: transform 0.25s ease;
+}
+
+.back-map-btn:hover {
+    background: #ffffff;
+    border-color: #c7d2fe;
+    color: #3730a3;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
+}
+
+.back-map-btn:hover .back-map-arrow {
+    transform: translateX(-3px);
+}
+
+.back-map-btn:active {
+    transform: translateY(0);
+}
