@@ -1,29 +1,24 @@
 const Parking = require("../models/Parking");
 
-
 // ==========================================
 // GET ALL PARKING SPOTS
 // ==========================================
 
 exports.getParkings = async(req, res) => {
-
     try {
-
         const parkings = await Parking.find()
+            .populate("owner", "name email")
             .sort({ createdAt: -1 });
 
         res.status(200).json(parkings);
 
     } catch (error) {
-
         console.error("GET PARKINGS ERROR:", error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
-
     }
-
 };
 
 
@@ -32,14 +27,43 @@ exports.getParkings = async(req, res) => {
 // ==========================================
 
 exports.createParking = async(req, res) => {
-
     try {
 
         console.log("=================================");
         console.log("CREATE PARKING REQUEST RECEIVED");
-        console.log("REQUEST BODY:", req.body);
-        console.log("USER:", req.user);
+        console.log("REQUEST BODY:");
+        console.log(req.body);
+
+        console.log("AUTHENTICATED USER:");
+        console.log(req.user);
+
         console.log("=================================");
+
+
+        // ==========================================
+        // CHECK AUTHENTICATION
+        // ==========================================
+
+        if (!req.user || !req.user.id) {
+
+            return res.status(401).json({
+                message: "Authentication required. Owner information not found.",
+            });
+
+        }
+
+
+        // ==========================================
+        // CHECK OWNER ROLE
+        // ==========================================
+
+        if (req.user.role !== "owner") {
+
+            return res.status(403).json({
+                message: "Only parking owners can add parking locations.",
+            });
+
+        }
 
 
         // ==========================================
@@ -49,7 +73,7 @@ exports.createParking = async(req, res) => {
         if (!req.body) {
 
             return res.status(400).json({
-                message: "Request body is missing."
+                message: "Request body is missing.",
             });
 
         }
@@ -63,7 +87,7 @@ exports.createParking = async(req, res) => {
             totalSlots,
             occupiedSlots,
             pricePerHour,
-            vehicleType
+            vehicleType,
         } = req.body;
 
 
@@ -74,7 +98,7 @@ exports.createParking = async(req, res) => {
         if (!name || !name.trim()) {
 
             return res.status(400).json({
-                message: "Parking name is required."
+                message: "Parking name is required.",
             });
 
         }
@@ -83,7 +107,7 @@ exports.createParking = async(req, res) => {
         if (!address || !address.trim()) {
 
             return res.status(400).json({
-                message: "Parking address is required."
+                message: "Parking address is required.",
             });
 
         }
@@ -96,7 +120,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Latitude is required."
+                message: "Latitude is required.",
             });
 
         }
@@ -109,7 +133,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Longitude is required."
+                message: "Longitude is required.",
             });
 
         }
@@ -122,7 +146,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Total slots are required."
+                message: "Total slots are required.",
             });
 
         }
@@ -135,7 +159,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Price per hour is required."
+                message: "Price per hour is required.",
             });
 
         }
@@ -146,24 +170,34 @@ exports.createParking = async(req, res) => {
         // ==========================================
 
         const latitudeNumber = Number(latitude);
+
         const longitudeNumber = Number(longitude);
+
         const totalSlotsNumber = Number(totalSlots);
+
         const priceNumber = Number(pricePerHour);
+
+        const occupiedSlotsNumber =
+            occupiedSlots === undefined ||
+            occupiedSlots === null ||
+            occupiedSlots === "" ?
+            0 :
+            Number(occupiedSlots);
 
 
         // ==========================================
         // NUMBER VALIDATION
         // ==========================================
 
-        if (
-            Number.isNaN(latitudeNumber) ||
-            Number.isNaN(longitudeNumber) ||
-            Number.isNaN(totalSlotsNumber) ||
-            Number.isNaN(priceNumber)
+        if (!Number.isFinite(latitudeNumber) ||
+            !Number.isFinite(longitudeNumber) ||
+            !Number.isFinite(totalSlotsNumber) ||
+            !Number.isFinite(priceNumber) ||
+            !Number.isFinite(occupiedSlotsNumber)
         ) {
 
             return res.status(400).json({
-                message: "Latitude, longitude, slots and price must be valid numbers."
+                message: "Latitude, longitude, slots and price must be valid numbers.",
             });
 
         }
@@ -175,7 +209,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Latitude must be between -90 and 90."
+                message: "Latitude must be between -90 and 90.",
             });
 
         }
@@ -187,7 +221,7 @@ exports.createParking = async(req, res) => {
         ) {
 
             return res.status(400).json({
-                message: "Longitude must be between -180 and 180."
+                message: "Longitude must be between -180 and 180.",
             });
 
         }
@@ -196,7 +230,28 @@ exports.createParking = async(req, res) => {
         if (totalSlotsNumber <= 0) {
 
             return res.status(400).json({
-                message: "Total slots must be greater than 0."
+                message: "Total slots must be greater than 0.",
+            });
+
+        }
+
+
+        if (occupiedSlotsNumber < 0) {
+
+            return res.status(400).json({
+                message: "Occupied slots cannot be negative.",
+            });
+
+        }
+
+
+        if (
+            occupiedSlotsNumber >
+            totalSlotsNumber
+        ) {
+
+            return res.status(400).json({
+                message: "Occupied slots cannot exceed total slots.",
             });
 
         }
@@ -205,14 +260,14 @@ exports.createParking = async(req, res) => {
         if (priceNumber < 0) {
 
             return res.status(400).json({
-                message: "Price cannot be negative."
+                message: "Price cannot be negative.",
             });
 
         }
 
 
         // ==========================================
-        // CREATE PARKING OBJECT
+        // CREATE PARKING DATA
         // ==========================================
 
         const parkingData = {
@@ -227,18 +282,25 @@ exports.createParking = async(req, res) => {
 
             totalSlots: totalSlotsNumber,
 
-            occupiedSlots: occupiedSlots !== undefined ?
-                Number(occupiedSlots) :
-                0,
+            occupiedSlots: occupiedSlotsNumber,
 
             pricePerHour: priceNumber,
 
-            vehicleType: vehicleType || "Car"
+            vehicleType: vehicleType || "Car",
 
+            // ========================================
+            // IMPORTANT:
+            // LINK PARKING TO LOGGED-IN OWNER
+            // ========================================
+
+            owner: req.user.id,
         };
 
 
-        console.log("PARKING DATA BEFORE MONGOOSE:");
+        console.log(
+            "PARKING DATA BEFORE MONGOOSE:"
+        );
+
         console.log(parkingData);
 
 
@@ -246,80 +308,94 @@ exports.createParking = async(req, res) => {
         // CREATE MONGOOSE DOCUMENT
         // ==========================================
 
-        const parking = new Parking(parkingData);
+        const parking =
+            new Parking(parkingData);
 
 
         // ==========================================
-        // SAVE TO DATABASE
+        // SAVE DATABASE
         // ==========================================
 
-        const savedParking = await parking.save();
-
-
-        console.log("=================================");
-        console.log("PARKING CREATED SUCCESSFULLY");
-        console.log(savedParking);
-        console.log("=================================");
+        const savedParking =
+            await parking.save();
 
 
         // ==========================================
         // RESPONSE
         // ==========================================
 
+        console.log("=================================");
+        console.log(
+            "PARKING CREATED SUCCESSFULLY"
+        );
+        console.log(savedParking);
+        console.log("=================================");
+
+
         return res.status(201).json({
 
             message: "Parking location added successfully.",
 
-            parking: savedParking
+            parking: savedParking,
 
         });
-
 
     } catch (error) {
 
         console.error("=================================");
-        console.error("CREATE PARKING ERROR");
+        console.error(
+            "CREATE PARKING ERROR"
+        );
         console.error(error);
-        console.error("ERROR MESSAGE:", error.message);
+        console.error(
+            "ERROR MESSAGE:",
+            error.message
+        );
         console.error("=================================");
 
 
         return res.status(500).json({
 
-            message: error.message
+            message: error.message,
 
         });
 
     }
-
 };
 
 
 // ==========================================
-// GET SINGLE PARKING BY ID
+// GET SINGLE PARKING
 // ==========================================
 
-exports.getParkingById = async(req, res) => {
+exports.getParkingById = async(
+    req,
+    res
+) => {
 
     try {
 
         const parking =
-            await Parking.findById(req.params.id);
+            await Parking.findById(
+                req.params.id
+            ).populate(
+                "owner",
+                "name email"
+            );
 
 
         if (!parking) {
 
             return res.status(404).json({
-
-                message: "Parking not found"
-
+                message: "Parking not found",
             });
 
         }
 
 
-        res.status(200).json(parking);
-
+        res.status(200).json(
+            parking
+        );
 
     } catch (error) {
 
@@ -328,15 +404,11 @@ exports.getParkingById = async(req, res) => {
             error
         );
 
-
         res.status(500).json({
-
-            message: error.message
-
+            message: error.message,
         });
 
     }
-
 };
 
 
@@ -344,38 +416,57 @@ exports.getParkingById = async(req, res) => {
 // UPDATE PARKING
 // ==========================================
 
-exports.updateParking = async(req, res) => {
+exports.updateParking = async(
+    req,
+    res
+) => {
 
     try {
 
         const parking =
-            await Parking.findByIdAndUpdate(
-
-                req.params.id,
-
-                req.body,
-
-                {
-                    new: true,
-                    runValidators: true
-                }
-
+            await Parking.findById(
+                req.params.id
             );
 
 
         if (!parking) {
 
             return res.status(404).json({
-
-                message: "Parking not found"
-
+                message: "Parking not found",
             });
 
         }
 
 
-        res.status(200).json(parking);
+        // ========================================
+        // ONLY OWNER CAN UPDATE
+        // ========================================
 
+        if (
+            parking.owner.toString() !==
+            req.user.id.toString()
+        ) {
+
+            return res.status(403).json({
+                message: "You are not allowed to update this parking.",
+            });
+
+        }
+
+
+        const updatedParking =
+            await Parking.findByIdAndUpdate(
+                req.params.id,
+                req.body, {
+                    new: true,
+                    runValidators: true,
+                }
+            );
+
+
+        res.status(200).json(
+            updatedParking
+        );
 
     } catch (error) {
 
@@ -384,15 +475,11 @@ exports.updateParking = async(req, res) => {
             error
         );
 
-
         res.status(500).json({
-
-            message: error.message
-
+            message: error.message,
         });
 
     }
-
 };
 
 
@@ -400,12 +487,15 @@ exports.updateParking = async(req, res) => {
 // DELETE PARKING
 // ==========================================
 
-exports.deleteParking = async(req, res) => {
+exports.deleteParking = async(
+    req,
+    res
+) => {
 
     try {
 
         const parking =
-            await Parking.findByIdAndDelete(
+            await Parking.findById(
                 req.params.id
             );
 
@@ -413,20 +503,38 @@ exports.deleteParking = async(req, res) => {
         if (!parking) {
 
             return res.status(404).json({
-
-                message: "Parking not found"
-
+                message: "Parking not found",
             });
 
         }
 
 
+        // ========================================
+        // ONLY OWNER CAN DELETE
+        // ========================================
+
+        if (
+            parking.owner.toString() !==
+            req.user.id.toString()
+        ) {
+
+            return res.status(403).json({
+                message: "You are not allowed to delete this parking.",
+            });
+
+        }
+
+
+        await Parking.findByIdAndDelete(
+            req.params.id
+        );
+
+
         res.status(200).json({
 
-            message: "Parking deleted successfully"
+            message: "Parking deleted successfully",
 
         });
-
 
     } catch (error) {
 
@@ -435,13 +543,9 @@ exports.deleteParking = async(req, res) => {
             error
         );
 
-
         res.status(500).json({
-
-            message: error.message
-
+            message: error.message,
         });
 
     }
-
 };

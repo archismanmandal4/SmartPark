@@ -7,9 +7,10 @@ const {
     createParking,
     getParkingById,
     updateParking,
-    deleteParking
+    deleteParking,
 } = require("../controllers/parkingController");
 
+const authMiddleware = require("../middleware/authMiddleware");
 
 // ==========================================
 // GET ALL PARKING
@@ -20,16 +21,16 @@ router.get(
     getParkings
 );
 
-
 // ==========================================
 // ADD PARKING
+// OWNER MUST BE LOGGED IN
 // ==========================================
 
 router.post(
     "/",
+    authMiddleware,
     createParking
 );
-
 
 // ==========================================
 // GET SINGLE PARKING
@@ -40,16 +41,15 @@ router.get(
     getParkingById
 );
 
-
 // ==========================================
 // UPDATE PARKING
 // ==========================================
 
 router.put(
     "/:id",
+    authMiddleware,
     updateParking
 );
-
 
 // ==========================================
 // DELETE PARKING
@@ -57,8 +57,8 @@ router.put(
 
 router.delete(
     "/:id",
+    authMiddleware,
     deleteParking
 );
-
 
 module.exports = router;
