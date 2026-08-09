@@ -11,41 +11,54 @@ const {
 } = require("../controllers/parkingController");
 
 
+// ==========================================
+// GET ALL PARKING
+// ==========================================
 
-// Get all parking
 router.get(
     "/",
     getParkings
 );
 
 
-// Add parking
+// ==========================================
+// ADD PARKING
+// ==========================================
+
 router.post(
     "/",
     createParking
 );
 
 
-// Get single parking
+// ==========================================
+// GET SINGLE PARKING
+// ==========================================
+
 router.get(
     "/:id",
     getParkingById
 );
 
 
-// Update parking
+// ==========================================
+// UPDATE PARKING
+// ==========================================
+
 router.put(
     "/:id",
     updateParking
 );
 
 
-// Delete parking
+// ==========================================
+// DELETE PARKING
+// ==========================================
+
 router.delete(
     "/:id",
     deleteParking
 );
-
 
 
 module.exports = router;
