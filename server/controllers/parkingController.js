@@ -6,15 +6,14 @@ const Parking = require("../models/Parking");
 
 exports.getParkings = async(req, res) => {
     try {
-        const parkings = await Parking.find().sort({ createdAt: -1 });
+        const parkings = await Parking.find();
 
         res.status(200).json(parkings);
-
     } catch (error) {
         console.error("GET PARKINGS ERROR:", error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };
@@ -26,8 +25,9 @@ exports.getParkings = async(req, res) => {
 
 exports.createParking = async(req, res) => {
     try {
-
-        console.log("CREATE PARKING BODY:", req.body);
+        console.log("=================================");
+        console.log("CREATE PARKING REQUEST BODY:");
+        console.log(JSON.stringify(req.body, null, 2));
 
         const {
             name,
@@ -36,9 +36,9 @@ exports.createParking = async(req, res) => {
             longitude,
             totalSlots,
             occupiedSlots,
-            pricePerHour
+            pricePerHour,
+            vehicleType,
         } = req.body;
-
 
         // ===============================
         // VALIDATION
@@ -46,13 +46,13 @@ exports.createParking = async(req, res) => {
 
         if (!name) {
             return res.status(400).json({
-                message: "Parking name is required."
+                message: "Parking name is required.",
             });
         }
 
         if (!address) {
             return res.status(400).json({
-                message: "Parking address is required."
+                message: "Parking address is required.",
             });
         }
 
@@ -62,7 +62,7 @@ exports.createParking = async(req, res) => {
             latitude === ""
         ) {
             return res.status(400).json({
-                message: "Latitude is required."
+                message: "Latitude is required.",
             });
         }
 
@@ -72,17 +72,13 @@ exports.createParking = async(req, res) => {
             longitude === ""
         ) {
             return res.status(400).json({
-                message: "Longitude is required."
+                message: "Longitude is required.",
             });
         }
 
-        if (
-            totalSlots === undefined ||
-            totalSlots === null ||
-            totalSlots === ""
-        ) {
+        if (!totalSlots) {
             return res.status(400).json({
-                message: "Total slots are required."
+                message: "Total slots are required.",
             });
         }
 
@@ -92,124 +88,62 @@ exports.createParking = async(req, res) => {
             pricePerHour === ""
         ) {
             return res.status(400).json({
-                message: "Price per hour is required."
+                message: "Price per hour is required.",
             });
         }
-
-
-        // ===============================
-        // CONVERT NUMBERS
-        // ===============================
-
-        const latitudeNumber = Number(latitude);
-        const longitudeNumber = Number(longitude);
-        const totalSlotsNumber = Number(totalSlots);
-        const priceNumber = Number(pricePerHour);
-
-
-        if (
-            Number.isNaN(latitudeNumber) ||
-            Number.isNaN(longitudeNumber) ||
-            Number.isNaN(totalSlotsNumber) ||
-            Number.isNaN(priceNumber)
-        ) {
-            return res.status(400).json({
-                message: "Latitude, longitude, slots and price must be valid numbers."
-            });
-        }
-
-
-        // ===============================
-        // RANGE VALIDATION
-        // ===============================
-
-        if (
-            latitudeNumber < -90 ||
-            latitudeNumber > 90
-        ) {
-            return res.status(400).json({
-                message: "Latitude must be between -90 and 90."
-            });
-        }
-
-
-        if (
-            longitudeNumber < -180 ||
-            longitudeNumber > 180
-        ) {
-            return res.status(400).json({
-                message: "Longitude must be between -180 and 180."
-            });
-        }
-
-
-        if (totalSlotsNumber <= 0) {
-            return res.status(400).json({
-                message: "Total slots must be greater than 0."
-            });
-        }
-
-
-        if (priceNumber < 0) {
-            return res.status(400).json({
-                message: "Price cannot be negative."
-            });
-        }
-
 
         // ===============================
         // CREATE PARKING
         // ===============================
 
         const parking = new Parking({
-
             name: name.trim(),
 
             address: address.trim(),
 
-            latitude: latitudeNumber,
+            latitude: Number(latitude),
 
-            longitude: longitudeNumber,
+            longitude: Number(longitude),
 
-            totalSlots: totalSlotsNumber,
+            totalSlots: Number(totalSlots),
 
             occupiedSlots: occupiedSlots !== undefined ?
                 Number(occupiedSlots) :
                 0,
 
-            pricePerHour: priceNumber
+            pricePerHour: Number(pricePerHour),
 
+            vehicleType: vehicleType || "Car",
         });
 
+        console.log("PARKING OBJECT BEFORE SAVE:");
+        console.log(parking);
 
         // ===============================
-        // SAVE TO MONGODB
+        // SAVE TO DATABASE
         // ===============================
 
         const savedParking = await parking.save();
 
+        console.log("PARKING SAVED SUCCESSFULLY:");
+        console.log(savedParking);
 
-        console.log(
-            "PARKING CREATED:",
-            savedParking
-        );
+        console.log("=================================");
 
-
-        res.status(201).json({
-            message: "Parking created successfully.",
-            parking: savedParking
-        });
-
+        res.status(201).json(savedParking);
 
     } catch (error) {
+        console.error("=================================");
+        console.error("CREATE PARKING ERROR:");
+        console.error(error);
 
-        console.error(
-            "CREATE PARKING ERROR:",
-            error
-        );
+        console.error("ERROR MESSAGE:");
+        console.error(error.message);
+
+        console.error("=================================");
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };
@@ -220,33 +154,22 @@ exports.createParking = async(req, res) => {
 // ===============================
 
 exports.getParkingById = async(req, res) => {
-
     try {
-
-        const parking =
-            await Parking.findById(req.params.id);
-
+        const parking = await Parking.findById(req.params.id);
 
         if (!parking) {
-
             return res.status(404).json({
-                message: "Parking not found"
+                message: "Parking not found",
             });
         }
 
-
         res.status(200).json(parking);
 
-
     } catch (error) {
-
-        console.error(
-            "GET PARKING ERROR:",
-            error
-        );
+        console.error("GET PARKING ERROR:", error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };
@@ -257,42 +180,29 @@ exports.getParkingById = async(req, res) => {
 // ===============================
 
 exports.updateParking = async(req, res) => {
-
     try {
-
         const parking =
             await Parking.findByIdAndUpdate(
                 req.params.id,
                 req.body, {
                     new: true,
-                    runValidators: true
+                    runValidators: true,
                 }
             );
 
-
         if (!parking) {
-
             return res.status(404).json({
-                message: "Parking not found"
+                message: "Parking not found",
             });
         }
 
-
-        res.status(200).json({
-            message: "Parking updated successfully.",
-            parking
-        });
-
+        res.status(200).json(parking);
 
     } catch (error) {
-
-        console.error(
-            "UPDATE PARKING ERROR:",
-            error
-        );
+        console.error("UPDATE PARKING ERROR:", error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };
@@ -303,39 +213,27 @@ exports.updateParking = async(req, res) => {
 // ===============================
 
 exports.deleteParking = async(req, res) => {
-
     try {
-
         const parking =
             await Parking.findByIdAndDelete(
                 req.params.id
             );
 
-
         if (!parking) {
-
             return res.status(404).json({
-                message: "Parking not found"
+                message: "Parking not found",
             });
         }
 
-
         res.status(200).json({
-
-            message: "Parking deleted successfully"
-
+            message: "Parking deleted successfully",
         });
 
-
     } catch (error) {
-
-        console.error(
-            "DELETE PARKING ERROR:",
-            error
-        );
+        console.error("DELETE PARKING ERROR:", error);
 
         res.status(500).json({
-            message: error.message
+            message: error.message,
         });
     }
 };
