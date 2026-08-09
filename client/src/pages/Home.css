@@ -602,7 +602,7 @@ html {
     gap: 20px;
     padding: 28px;
     border-radius: 18px;
-    background: linear-gradient( 135deg, rgba(61, 12, 12, 0.99), rgba(247, 244, 245, 0.98));
+    background: linear-gradient( 135deg, rgba(92, 37, 37, 0.99), rgba(131, 89, 102, 0.98));
     color: #6e1e34;
     border: 1px solid rgba(60, 17, 17, 0.85);
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
@@ -640,7 +640,7 @@ html {
 }
 
 .premium-stat-card span {
-    color: #686065;
+    color: #ede9eb;
     font-size: 13px;
     font-weight: 500;
 }
@@ -677,7 +677,7 @@ html {
 .pricing-section>p {
     max-width: 650px;
     margin: 20px auto 0;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(255, 250, 250, 0.55);
     line-height: 1.7;
     font-size: 16px;
 }
@@ -1220,4 +1220,67 @@ html {
         font-size: 11px !important;
         padding: 7px 10px !important;
     }
+}
+
+.features-intro {
+    margin-bottom: 45px !important;
+}
+
+.feature-category {
+    margin-top: 35px;
+}
+
+.feature-category-label {
+    margin-bottom: 15px;
+    color: #ee526d;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.premium-feature {
+    padding: 25px;
+    min-height: 200px;
+    border-radius: 17px;
+    background: rgba(255, 255, 255, 0.035);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.premium-feature:hover {
+    transform: translateY(-5px);
+    border-color: rgba(238, 82, 109, 0.35);
+}
+
+.feature-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: rgba(238, 82, 109, 0.10);
+    color: #ee526d;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.premium-feature h3 {
+    margin: 0 0 9px;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+.premium-feature p {
+    margin: 0;
+    color: #a99599;
+    font-size: 12px;
+    line-height: 1.6;
 }

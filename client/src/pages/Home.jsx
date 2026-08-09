@@ -3,1429 +3,1071 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 import heroImage from "../assets/smartpark-hero.png";
-import Navbar from "../components/Navbar";
 
 function Home() {
-
 const navigate = useNavigate();
 
+const [showIntro, setShowIntro] = useState(true);
 
-const [showIntro,setShowIntro] = useState(true);
-
-
-const [isLoggedIn,setIsLoggedIn] = useState(
-  !!localStorage.getItem("token")
-);
-
-
-
-const [stats,setStats] = useState({
-
-totalParkings:14,
-
-totalSlots:2490,
-
-availableSlots:1305,
-
-totalBookings:10
-
-});
-
-
-
-
-// INTRO
-
-useEffect(()=>{
-
-const timer=setTimeout(()=>{
-
-setShowIntro(false);
-
-},2400);
-
-
-return ()=>clearTimeout(timer);
-
-
-},[]);
-
-
-
-
-// LOGIN CHECK
-
-useEffect(()=>{
-
-
-const checkLogin=()=>{
-
-setIsLoggedIn(
+const [isLoggedIn, setIsLoggedIn] = useState(
 !!localStorage.getItem("token")
 );
 
-};
-
-
-window.addEventListener(
-"storage",
-checkLogin
-);
-
-
-window.addEventListener(
-"focus",
-checkLogin
-);
-
-
-
-return()=>{
-
-window.removeEventListener(
-"storage",
-checkLogin
-);
-
-
-window.removeEventListener(
-"focus",
-checkLogin
-);
-
-};
-
-
-},[]);
-
-
-
-
-
-// DASHBOARD STATS
-
-useEffect(()=>{
-
-
-fetch(
-"VITE_API_URL=https://smartpark-tvls.onrender.com/api/dashboard"
-)
-
-.then(res=>res.json())
-
-.then(data=>{
-
-
-setStats({
-
-totalParkings:data.totalParkings ?? 14,
-
-totalSlots:data.totalSlots ?? 2490,
-
-availableSlots:data.availableSlots ?? 1305,
-
-totalBookings:data.totalBookings ?? 10
-
+const [stats, setStats] = useState({
+totalParkings: 14,
+totalSlots: 2490,
+availableSlots: 1305,
+totalBookings: 10,
 });
 
+// ==========================================
+// INTRO SCREEN
+// ==========================================
 
-})
-
-.catch(()=>{});
-
-
-},[]);
-
-
-
+useEffect(() => {
+const timer = setTimeout(() => {
+setShowIntro(false);
+}, 2400);
 
 
-const handleBooking=()=>{
+return () => clearTimeout(timer);
 
 
-if(localStorage.getItem("token")){
+}, []);
 
-navigate("/map");
+// ==========================================
+// LOGIN STATE
+// ==========================================
 
-}
-
-else{
-
-navigate("/login");
-
-}
-
-
+useEffect(() => {
+const checkLogin = () => {
+setIsLoggedIn(!!localStorage.getItem("token"));
 };
 
 
+window.addEventListener("storage", checkLogin);
+window.addEventListener("focus", checkLogin);
+
+return () => {
+  window.removeEventListener("storage", checkLogin);
+  window.removeEventListener("focus", checkLogin);
+};
 
 
+}, []);
 
-const handleLogout=()=>{
+// ==========================================
+// DASHBOARD STATS
+// ==========================================
+
+useEffect(() => {
+const API_URL =
+import.meta.env.VITE_API_URL ||
+"https://smartpark-tvls.onrender.com";
 
 
+fetch(`${API_URL}/api/dashboard`)
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error("Failed to fetch dashboard statistics");
+    }
+
+    return res.json();
+  })
+  .then((data) => {
+    setStats({
+      totalParkings: data.totalParkings ?? 14,
+      totalSlots: data.totalSlots ?? 2490,
+      availableSlots: data.availableSlots ?? 1305,
+      totalBookings: data.totalBookings ?? 10,
+    });
+  })
+  .catch((error) => {
+    console.log("HOME STATS ERROR:", error);
+  });
+
+
+}, []);
+
+// ==========================================
+// BOOKING
+// ==========================================
+
+const handleBooking = () => {
+if (localStorage.getItem("token")) {
+navigate("/map");
+} else {
+navigate("/login");
+}
+};
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+const handleLogout = () => {
 localStorage.removeItem("token");
-
 localStorage.removeItem("user");
+
 
 setIsLoggedIn(false);
 
 navigate("/");
+window.location.reload();
 
 
 };
 
-
-
-
-
-return(
-
-<div className="smartpark-page">
-
-
-<AnimatePresence>
-
-
-{showIntro && (
-
-<motion.div
-
-className="intro-screen"
-
-initial={{opacity:1}}
-
-exit={{
-opacity:0,
-transition:{
-duration:0.7
-}
-}}
-
->
-
-
-<div className="intro-background-glow"/>
-
-
-
-<motion.div
-
-className="intro-logo"
-
-initial={{
-opacity:0,
-scale:0.85
-}}
-
-animate={{
-opacity:1,
-scale:1
-}}
-
-transition={{
-duration:0.9
-}}
-
->
-
-<span>
-Smart
-</span>
-
-<strong>
-Park
-</strong>
-
-
-</motion.div>
-
-
-
-<div className="intro-word">
-
-Find Nearest Parking
-
-
-</div>
-
-
-
-<motion.p
-
-initial={{opacity:0}}
-
-animate={{opacity:1}}
-
-transition={{
-delay:0.9
-}}
-
->
-
-SMART PARKING. SMARTER CITY.
-
-</motion.p>
-
-
-
-</motion.div>
-
-)}
-
-
-</AnimatePresence>
-
-
-
-<motion.div
-
-className="main-site"
-
-initial={{opacity:0}}
-
-animate={{
-opacity:showIntro ? 0 : 1
-}}
-
-transition={{
-duration:0.7
-}}
->{/* ================================
-        NAVBAR
-================================ */}
-
-
-<header className="premium-navbar">
-
-
-<div
-className="premium-logo"
-onClick={()=>navigate("/")}
->
-
-<span>
-Smart
-</span>
-
-<strong>
-Park
-</strong>
-
-</div>
-
-
-
-
-<nav className="premium-nav-links">
-
-
-<button
-className="nav-link active"
-onClick={()=>navigate("/")}
->
-Home
-</button>
-
-
-
-<button
-className="nav-link"
-onClick={()=>navigate("/map")}
->
-Map
-</button>
-
-
-
-
-<button
-className="nav-link"
-onClick={()=>document
-.getElementById("how-it-works")
+// ==========================================
+// SCROLL TO SECTION
+// ==========================================
+
+const scrollToSection = (id) => {
+document
+.getElementById(id)
 ?.scrollIntoView({
-behavior:"smooth"
-})}
->
-How it Works
-</button>
+behavior: "smooth",
+});
+};
 
+return ( <div className="smartpark-page">
 
+```
+  {/* ==========================================
+      INTRO SCREEN
+  ========================================== */}
 
+  <AnimatePresence>
+    {showIntro && (
+      <motion.div
+        className="intro-screen"
+        initial={{ opacity: 1 }}
+        exit={{
+          opacity: 0,
+          transition: {
+            duration: 0.7,
+          },
+        }}
+      >
+        <div className="intro-background-glow" />
 
-<button
-className="nav-link"
-onClick={()=>document
-.getElementById("features")
-?.scrollIntoView({
-behavior:"smooth"
-})}
->
-Features
-</button>
+        <motion.div
+          className="intro-logo"
+          initial={{
+            opacity: 0,
+            scale: 0.85,
+          }}
+          animate={{
+            opacity: 1,
+            scale: 1,
+          }}
+          transition={{
+            duration: 0.9,
+          }}
+        >
+          <span>Smart</span>
+          <strong>Park</strong>
+        </motion.div>
 
+        <div className="intro-word">
+          Find Nearest Parking
+        </div>
 
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            delay: 0.9,
+          }}
+        >
+          SMART PARKING. SMARTER CITY.
+        </motion.p>
+      </motion.div>
+    )}
+  </AnimatePresence>
 
+  {/* ==========================================
+      MAIN WEBSITE
+  ========================================== */}
 
-
-
-<button
-className="nav-link"
-onClick={()=>document
-.getElementById("contact")
-?.scrollIntoView({
-behavior:"smooth"
-})}
->
-Contact
-</button>
-
-
-
-
-{isLoggedIn && (
-
-<button
-
-className="nav-link"
-
-onClick={()=>navigate("/dashboard")}
-
->
-
-Dashboard
-
-</button>
-
-)}
-
-
-
-</nav>
-
-
-
-
-
-<div className="navbar-actions">
-
-
-{isLoggedIn ? (
-
-<>
-
-
-
-  <button
-    className="nav-book-btn"
-    onClick={handleBooking}
-  >
-    Book a Slot &ensp;
-  </button>
-
-  <button
-    className="nav-logout-btn"
-    onClick={() => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("user");
-      navigate("/");
-      window.location.reload();
+  <motion.div
+    className="main-site"
+    initial={{ opacity: 0 }}
+    animate={{
+      opacity: showIntro ? 0 : 1,
+    }}
+    transition={{
+      duration: 0.7,
     }}
   >
-    <span>↪</span>
-    Logout 
-  </button>
-</>
-):(
+
+    {/* ==========================================
+        NAVBAR
+    ========================================== */}
+
+    <header className="premium-navbar">
+
+      {/* LOGO */}
+
+      <div
+        className="premium-logo"
+        onClick={() => navigate("/")}
+      >
+        <span>Smart</span>
+        <strong>Park</strong>
+      </div>
 
 
-<>
+      {/* NAVIGATION */}
+
+      <nav className="premium-nav-links">
+
+        <button
+          className="nav-link active"
+          onClick={() => navigate("/")}
+        >
+          Home
+        </button>
 
 
-<button
-
-className="nav-link"
-
-onClick={()=>navigate("/login")}
-
->
-
-Login
-
-</button> &ensp;
+        <button
+          className="nav-link"
+          onClick={() => navigate("/map")}
+        >
+          Map
+        </button>
 
 
-
-<button
-
-className="nav-book-btn"
-
-onClick={()=>navigate("/register")}
-
->
-
-Register
-
-</button> &ensp;
+        <button
+          className="nav-link"
+          onClick={() =>
+            scrollToSection("how-it-works")
+          }
+        >
+          How it Works
+        </button>
 
 
+        <button
+          className="nav-link"
+          onClick={() =>
+            scrollToSection("features")
+          }
+        >
+          Features
+        </button>
 
 
-<button
-
-className="nav-book-btn"
-
-onClick={handleBooking}
-
->
-
-Book a Slot
-
-</button>
+        <button
+          className="nav-link"
+          onClick={() =>
+            scrollToSection("contact")
+          }
+        >
+          Contact
+        </button>
 
 
+        {isLoggedIn && (
+          <button
+            className="nav-link"
+            onClick={() =>
+              navigate("/dashboard")
+            }
+          >
+            Dashboard
+          </button>
+        )}
 
-</>
-
-
-)}
-
-
-
-</div>
-
-
-
-</header>
-
+      </nav>
 
 
+      {/* NAVBAR ACTIONS */}
+
+      <div className="navbar-actions">
+
+        {isLoggedIn ? (
+          <>
+
+            <button
+              className="nav-book-btn"
+              onClick={handleBooking}
+            >
+              Book a Slot
+            </button>
 
 
+            <button
+              className="nav-logout-btn"
+              onClick={handleLogout}
+            >
+              <span>↪</span>
+              Logout
+            </button>
+
+          </>
+        ) : (
+          <>
+
+            <button
+              className="nav-link"
+              onClick={() =>
+                navigate("/login")
+              }
+            >
+              Login
+            </button>
 
 
+            <button
+              className="nav-book-btn"
+              onClick={() =>
+                navigate("/register")
+              }
+            >
+              Register
+            </button>
 
-{/* ================================
+
+            <button
+              className="nav-book-btn"
+              onClick={handleBooking}
+            >
+              Book a Slot
+            </button>
+
+          </>
+        )}
+
+      </div>
+
+    </header>
+
+
+    {/* ==========================================
         HERO
-================================ */}
+    ========================================== */}
 
+    <section className="premium-hero">
 
+      <div className="hero-glow-one" />
+      <div className="hero-glow-two" />
 
-<section className="premium-hero">
 
+      <div className="hero-content">
 
+        <div className="network-badge">
 
-<div className="hero-glow-one"/>
+          <span className="live-dot" />
 
-<div className="hero-glow-two"/>
+          Find Nearest Available Parking
 
+        </div>
 
 
+        <h1>
 
+          Your Space
 
-<div className="hero-content">
+          <br />
 
+          <span>
+            Before You
+          </span>
 
+          <br />
 
-<div className="network-badge">
+          <span>
+            Reach It !
+          </span>
 
-<span className="live-dot"/>
+        </h1>
 
-Find Nearest Available Parking
 
-</div>
+        <p className="hero-description">
 
+          SmartPark connects you with available
+          parking around you, shows live availability,
+          compares prices and helps you reserve your
+          space in advance.
 
+        </p>
 
 
-<h1>
+        <div className="hero-actions">
 
-Your Space
+          <button
+            className="hero-primary-btn"
+            onClick={() => navigate("/map")}
+          >
+            Explore Parking
 
-<br/>
+            <span>
+              →
+            </span>
+          </button>
 
-<span>
-Before You
-</span>
 
-<br/>
+          <button
+            className="hero-secondary-btn"
+            onClick={handleBooking}
+          >
+            Reserve a Space
+          </button>
 
-<span>
-Reach It !
-</span>
+        </div>
 
 
-</h1>
+        <div className="hero-benefits">
 
+          <div className="benefit">
 
+            <div className="benefit-icon">
+              ◉
+            </div>
 
+            <div>
+              <strong>
+                Live Availability
+              </strong>
 
+              <span>
+                Real-time updates
+              </span>
+            </div>
 
-<p className="hero-description">
+          </div>
 
-SmartPark connects you with available parking
-around you, shows live availability, compares
-prices and helps you reserve your space in advance.
 
-</p>
+          <div className="benefit">
 
+            <div className="benefit-icon">
+              ⚡
+            </div>
 
+            <div>
+              <strong>
+                Instant Reservation
+              </strong>
 
+              <span>
+                Book in seconds
+              </span>
+            </div>
 
-<div className="hero-actions">
+          </div>
 
 
-<button
+          <div className="benefit">
 
-className="hero-primary-btn"
+            <div className="benefit-icon">
+              ♢
+            </div>
 
-onClick={()=>navigate("/map")}
+            <div>
+              <strong>
+                Secure Platform
+              </strong>
 
->
+              <span>
+                Protected account
+              </span>
+            </div>
 
-Explore Parking
+          </div>
 
-<span>
-→
-</span>
+        </div>
 
+      </div>
 
-</button>
 
+      {/* HERO VISUAL */}
 
+      <div className="hero-visual">
 
+        <img
+          src={heroImage}
+          alt="SmartPark parking"
+          className="hero-car-image"
+        />
 
-<button
 
-className="hero-secondary-btn"
+        <motion.div>
 
-onClick={handleBooking}
+          <div className="parking-ring outer" />
+          <div className="parking-ring middle" />
+          <div className="parking-ring inner" />
 
->
+          <div className="parking-pin">
+            <span>
+              P
+            </span>
+          </div>
 
-Reserve a Space
+        </motion.div>
 
-</button>
 
+        {/* LOCATION CARD */}
 
-</div>
+        <div className="floating-info-card card-location">
 
+          <div className="info-icon">
+            ♧
+          </div>
 
+          <div>
 
+            <strong>
+              {stats.totalParkings}
+            </strong>
 
+            <span>
+              Spots Nearby
+            </span>
 
+            <small>
+              Within 500m
+            </small>
 
-<div className="hero-benefits">
+          </div>
 
+        </div>
 
-<div className="benefit">
 
-<div className="benefit-icon">
-◉
-</div>
+        {/* PRICE CARD */}
 
+        <div className="floating-info-card card-price">
 
-<div>
+          <div className="info-icon">
+            ₹
+          </div>
 
-<strong>
-Live Availability
-</strong>
+          <div>
 
-<span>
-Real-time updates
-</span>
+            <strong>
+              ₹25
+            </strong>
 
-</div>
+            <span>
+              Starting From
+            </span>
 
+            <small>
+              Per Hour
+            </small>
 
-</div>
+          </div>
 
+        </div>
 
 
+        {/* TIME CARD */}
 
+        <div className="floating-info-card card-time">
 
-<div className="benefit">
+          <div className="info-icon">
+            ◷
+          </div>
 
-<div className="benefit-icon">
-⚡
-</div>
+          <div>
 
+            <strong>
+              2 <small>mins</small>
+            </strong>
 
-<div>
+            <small>
+              From You
+            </small>
 
-<strong>
-Instant Reservation
-</strong>
+          </div>
 
-<span>
-Book in seconds
-</span>
+        </div>
 
-</div>
+      </div>
 
+    </section>
 
-</div>
 
-
-
-
-
-
-<div className="benefit">
-
-<div className="benefit-icon">
-♢
-</div>
-
-
-<div>
-
-<strong>
-Secure Platform
-</strong>
-
-<span>
-100% protected
-</span>
-
-</div>
-
-
-</div>
-
-
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-
-
-
-<div className="hero-visual">
-
-
-
-<img
-
-src={heroImage}
-
-alt="SmartPark parking"
-
-className="hero-car-image"
-
-/>
-
-
-
-
-
-<motion.div
-
->
-
-
-<div className="parking-ring outer"/>
-
-<div className="parking-ring middle"/>
-
-<div className="parking-ring inner"/>
-
-
-
-<div className="parking-pin">
-
-<span>
-P
-</span>
-
-</div>
-
-
-
-</motion.div>
-
-
-
-
-
-<div className="floating-info-card card-location">
-
-<div className="info-icon">
-♧
-</div>
-
-
-<div>
-
-<strong>
-{stats.totalParkings}
-</strong>
-
-<span>
-Spots Nearby
-</span>
-
-<small>
-Within 500m
-</small>
-
-</div>
-
-
-</div>
-
-
-<div className="floating-info-card card-price">
-
-
-<div className="info-icon">
-₹
-</div>
-
-
-<div>
-
-<strong>
-₹25
-</strong>
-
-<span>
-Starting From
-</span>
-
-<small>
-Per Hour
-</small>
-
-</div>
-
-
-</div>
-
-
-
-
-
-<div className="floating-info-card card-time">
-
-
-<div className="info-icon">
-◷
-</div>
-
-
-<div>
-
-<strong>
-2 <small>mins</small>
-</strong>
-<small>
-From You
-</small>
-</div>
-</div>
-</div>
-</section>{/* ================================
+    {/* ==========================================
         STATS
-================================ */}
+    ========================================== */}
+
+    <section className="stats-section">
+
+      <StatCard
+        icon="⌖"
+        value={stats.totalParkings}
+        label="Parking Locations"
+      />
+
+      <StatCard
+        icon="▱"
+        value={stats.totalSlots}
+        label="Total Slots"
+      />
+
+      <StatCard
+        icon="✓"
+        value={stats.availableSlots}
+        label="Available Slots"
+      />
+
+      <StatCard
+        icon="♙"
+        value={stats.totalBookings}
+        label="Total Bookings"
+      />
+
+    </section>
 
 
-<section className="stats-section">
-
-
-<StatCard
-
-icon="⌖"
-
-value={stats.totalParkings}
-
-label="Parking Locations"
-
-/>
-
-
-
-<StatCard
-
-icon="▱"
-
-value={stats.totalSlots}
-
-label="Total Slots"
-
-/>
-
-
-
-<StatCard
-
-icon="✓"
-
-value={stats.availableSlots}
-
-label="Available Slots"
-
-/>
-
-
-
-<StatCard
-
-icon="♙"
-
-value={stats.totalBookings}
-
-label="Total Bookings"
-
-/>
-
-
-
-</section>
-
-
-
-
-
-
-
-{/* ================================
+    {/* ==========================================
         HOW IT WORKS
-================================ */}
+    ========================================== */}
 
+    <section
+      className="simple-section"
+      id="how-it-works"
+    >
 
-<section
+      <div className="section-label">
+        SIMPLE PROCESS
+      </div>
 
-className="simple-section"
 
-id="how-it-works"
+      <h2>
+        Park smarter in three steps.
+      </h2>
 
->
 
+      <p>
+        Find your space, reserve it and arrive
+        without wasting time searching for parking.
+      </p>
 
-<div className="section-label">
 
-SIMPLE PROCESS
+      <div className="steps-grid">
 
-</div>
+        <div className="step-card">
 
+          <span>
+            01
+          </span>
 
+          <h3>
+            Find
+          </h3>
 
-<h2>
+          <p>
+            Discover available parking near
+            your destination.
+          </p>
 
-Park smarter in three steps.
+        </div>
 
-</h2>
 
+        <div className="step-card">
 
+          <span>
+            02
+          </span>
 
+          <h3>
+            Reserve
+          </h3>
 
-<p>
+          <p>
+            Choose your preferred slot and
+            reserve it instantly.
+          </p>
 
-Find your space, reserve it and arrive without wasting time searching for parking.
+        </div>
 
-</p>
 
+        <div className="step-card">
 
+          <span>
+            03
+          </span>
 
+          <h3>
+            Park
+          </h3>
 
-<div className="steps-grid">
+          <p>
+            Arrive, park and enjoy a completely
+            stress-free experience.
+          </p>
 
+        </div>
 
+      </div>
 
-<div className="step-card">
+    </section>
 
-<span>
-01
-</span>
 
-<h3>
-Find
-</h3>
-
-<p>
-
-Discover available parking near your destination.
-
-</p>
-
-</div>
-
-
-
-
-
-<div className="step-card">
-
-<span>
-02
-</span>
-
-<h3>
-Reserve
-</h3>
-
-<p>
-
-Choose your preferred slot and reserve it instantly.
-
-</p>
-
-</div>
-
-
-
-
-
-<div className="step-card">
-
-<span>
-03
-</span>
-
-<h3>
-Park
-</h3>
-
-<p>
-
-Arrive, park and enjoy a completely stress-free experience.
-
-</p>
-
-</div>
-
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-{/* ================================
+    {/* ==========================================
         FEATURES
-================================ */}
+    ========================================== */}
 
+    <section
+      className="simple-section"
+      id="features"
+    >
 
+      <div className="section-label">
+        SMARTPARK FEATURES
+      </div>
 
-<section
 
-className="simple-section"
+      <h2>
+        Built for both{" "}
+        <span>
+          Drivers & Parking Owners.
+        </span>
+      </h2>
 
-id="features"
 
->
+      <p className="features-intro">
+        SmartPark makes parking easier for drivers
+        while helping parking owners manage their
+        parking spaces.
+      </p>
 
 
+      {/* ========================================
+          DRIVER FEATURES
+      ======================================== */}
 
-<div className="section-label">
+      <div className="feature-category">
 
-SMART FEATURES
+        <div className="feature-category-label">
+          FOR USERS
+        </div>
 
-</div>
 
+        <div className="feature-grid">
 
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ◉
+            </div>
 
-<h2>
+            <h3>
+              Nearest Availability
+            </h3>
 
-Everything you need to park better.
+            <p>
+              Find nearby parking spaces using
+              your live location.
+            </p>
 
-</h2>
+          </div>
 
 
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ⚡
+            </div>
 
+            <h3>
+              Instant Booking
+            </h3>
 
-<div className="feature-grid">
+            <p>
+              Reserve an available parking space
+              before you arrive.
+            </p>
 
+          </div>
 
 
-<div className="premium-feature">
+          <div className="premium-feature">
 
-<div>
-◉
-</div>
+            <div className="feature-icon">
+              ₹
+            </div>
 
+            <h3>
+              Transparent Pricing
+            </h3>
 
-<h3>
-Nearest Availability
-</h3>
+            <p>
+              View hourly parking rates before
+              making a reservation.
+            </p>
 
+          </div>
 
-<p>
-See nearest parking availability before you arrive.
-</p>
 
+          <div className="premium-feature">
 
-</div>
+            <div className="feature-icon">
+              ✓
+            </div>
 
+            <h3>
+              Booking Management
+            </h3>
 
+            <p>
+              View your reservations and manage
+              active bookings from your dashboard.
+            </p>
 
+          </div>
 
+        </div>
 
-<div className="premium-feature">
+      </div>
 
-<div>
-⚡
-</div>
 
+      {/* ========================================
+          OWNER FEATURES
+      ======================================== */}
 
-<h3>
-Instant Booking
-</h3>
+      <div className="feature-category owner-features">
 
+        <div className="feature-category-label">
+          FOR PARKING OWNERS
+        </div>
 
-<p>
-Reserve your parking space before you arrive.
-</p>
 
+        <div className="feature-grid">
 
-</div>
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ＋
+            </div>
 
+            <h3>
+              Add Parking Space
+            </h3>
 
+            <p>
+              Register your parking location and
+              make it available on SmartPark.
+            </p>
 
+          </div>
 
-<div className="premium-feature">
 
-<div>
-₹
-</div>
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ◫
+            </div>
 
-<h3>
-Transparent Pricing
-</h3>
+            <h3>
+              Manage Parking
+            </h3>
 
+            <p>
+              Manage your registered parking
+              locations and capacity.
+            </p>
 
-<p>
-Compare parking prices and choose confidently.
-</p>
+          </div>
 
 
-</div>
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ◉
+            </div>
 
+            <h3>
+              Live Slot Availability
+            </h3>
 
+            <p>
+              Track occupied and available slots
+              for your parking space.
+            </p>
 
+          </div>
 
-<div className="premium-feature">
 
-<div>
-♢
-</div>
+          <div className="premium-feature">
 
+            <div className="feature-icon">
+              ▣
+            </div>
 
-<h3>
-Secure Platform
-</h3>
+            <h3>
+              Owner Dashboard
+            </h3>
 
+            <p>
+              Monitor parking capacity and manage
+              your parking operations from one place.
+            </p>
 
-<p>
-Your bookings and account remain protected.
-</p>
+          </div>
 
+        </div>
 
-</div>
+      </div>
 
+    </section>
 
 
-</div>
+    {/* ==========================================
+        PRICING / LOCATION
+    ========================================== */}
 
+    <section
+      className="pricing-section"
+      id="pricing"
+    >
 
+      <div className="section-label">
+        CHOOSE PARKINGS BASED ON USER RATINGS
+      </div>
 
-</section>
 
+      <h2>
+        Instead of roaming around looking for
+        a parking, find nearest available spots
+        using your live location.
+      </h2>
 
 
+      <p>
+        No complicated plans. Find a spot and pay
+        according to the parking location.
+      </p>
 
+    </section>
 
 
-
-
-{/* ================================
-        PRICING
-================================ */}
-
-
-
-<section
-
-className="pricing-section"
-
-id="pricing"
-
->
-
-
-<div className="section-label">
-Choose Parkings Based On User Ratings
-
-</div>
-
-
-
-
-<h2>
-
-Instead of Roaming Around Looking For A Parking,
-Find Nearest Available Spots Using Your Live Location. 
-
-</h2>
-
-
-
-
-<p>
-
-No complicated plans. Find a spot and pay according to the parking location.
-
-</p>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-{/* ================================
+    {/* ==========================================
         CTA
-================================ */}
+    ========================================== */}
+
+    <section
+      className="final-cta"
+      id="contact"
+    >
+
+      <div>
+
+        <div className="section-label">
+          READY WHEN YOU ARE
+        </div>
 
 
-
-<section
-
-className="final-cta"
-
-id="contact"
-
->
+        <h2>
+          Your parking space is waiting.
+        </h2>
 
 
+        <p>
+          Stop searching. Start parking smarter.
+        </p>
 
-<div>
-
-
-<div className="section-label">
-
-READY WHEN YOU ARE
-
-</div>
+      </div>
 
 
+      <button
+        className="hero-primary-btn"
+        onClick={handleBooking}
+      >
 
-<h2>
+        Reserve a Space
 
-Your parking space is waiting.
+        <span>
+          →
+        </span>
 
-</h2>
+      </button>
 
-
-
-
-<p>
-
-Stop searching. Start parking smarter.
-
-</p>
-
-
-</div>
+    </section>
 
 
-
-
-
-
-<button
-
-className="hero-primary-btn"
-
-onClick={handleBooking}
-
->
-
-Reserve a Space
-
-<span>
-→
-</span>
-
-
-</button>
-
-
-
-
-</section>
-
-
-
-
-
-
-
-
-{/* ================================
+    {/* ==========================================
         FOOTER
-================================ */}
+    ========================================== */}
+
+    <footer className="premium-footer">
+
+      <div className="premium-logo">
+
+        <span>
+          Smart
+        </span>
+
+        <strong>
+          Park
+        </strong>
+
+      </div>
 
 
-
-<footer className="premium-footer">
-
-
-
-<div className="premium-logo">
-
-<span>
-Smart
-</span>
-
-<strong>
-Park
-</strong>
-
-</div>
+      <p>
+        Smart Parking Management System
+      </p>
 
 
+      <span>
+        © 2026 SmartPark. All Rights Reserved.
+      </span>
 
+    </footer>
 
-
-<p>
-
-Smart Parking Management System
-
-</p>
-
-
-
-
-<span>
-
-© 2026 SmartPark. All Rights Reserved.
-
-</span>
-
-
-
-
-</footer>
-
-
-
-
-
-</motion.div>
-
+  </motion.div>
 
 </div>
 
 
 );
-
 }
 
-
-
-
-
-
-
-// ================================
+// ==========================================
 // STAT CARD COMPONENT
-// ================================
-
+// ==========================================
 
 function StatCard({
-
 icon,
-
 value,
-
-label
-
-}){
-
-
-return(
-
+label,
+}) {
+return (
 <motion.div
-
 className="premium-stat-card"
-
 whileHover={{
-y:-6
+y: -6,
 }}
-
 transition={{
-duration:0.25
+duration: 0.25,
 }}
-
 >
 
 
-<div className="stat-icon">
-
-{icon}
-
-</div>
+  <div className="stat-icon">
+    {icon}
+  </div>
 
 
+  <div>
 
+    <strong>
+      {value}
+    </strong>
 
-<div>
+    <span>
+      {label}
+    </span>
 
-<strong>
-
-{value}
-
-</strong>
-
-
-<span>
-
-{label}
-
-</span>
-
-
-</div>
-
-
-
+  </div>
 
 </motion.div>
 
 
 );
-
-
 }
-
-
 
 export default Home;
