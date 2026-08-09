@@ -6,7 +6,9 @@ const Parking = require("../models/Parking");
 
 exports.getParkings = async(req, res) => {
     try {
-        const parkings = await Parking.find();
+        const parkings = await Parking.find().sort({
+            createdAt: -1,
+        });
 
         res.status(200).json(parkings);
     } catch (error) {
@@ -18,7 +20,6 @@ exports.getParkings = async(req, res) => {
     }
 };
 
-
 // ===============================
 // ADD NEW PARKING SPOT
 // ===============================
@@ -26,8 +27,10 @@ exports.getParkings = async(req, res) => {
 exports.createParking = async(req, res) => {
     try {
         console.log("=================================");
-        console.log("CREATE PARKING REQUEST BODY:");
-        console.log(JSON.stringify(req.body, null, 2));
+        console.log("CREATE PARKING REQUEST RECEIVED");
+        console.log("REQUEST BODY:", req.body);
+        console.log("USER:", req.user);
+        console.log("=================================");
 
         const {
             name,
@@ -44,13 +47,13 @@ exports.createParking = async(req, res) => {
         // VALIDATION
         // ===============================
 
-        if (!name) {
+        if (!name || !name.trim()) {
             return res.status(400).json({
                 message: "Parking name is required.",
             });
         }
 
-        if (!address) {
+        if (!address || !address.trim()) {
             return res.status(400).json({
                 message: "Parking address is required.",
             });
@@ -76,7 +79,11 @@ exports.createParking = async(req, res) => {
             });
         }
 
-        if (!totalSlots) {
+        if (
+            totalSlots === undefined ||
+            totalSlots === null ||
+            totalSlots === ""
+        ) {
             return res.status(400).json({
                 message: "Total slots are required.",
             });
@@ -93,40 +100,123 @@ exports.createParking = async(req, res) => {
         }
 
         // ===============================
+        // CONVERT NUMBERS
+        // ===============================
+
+        const latitudeNumber = Number(latitude);
+        const longitudeNumber = Number(longitude);
+        const totalSlotsNumber = Number(totalSlots);
+        const priceNumber = Number(pricePerHour);
+
+        // ===============================
+        // NUMERIC VALIDATION
+        // ===============================
+
+        if (
+            Number.isNaN(latitudeNumber) ||
+            Number.isNaN(longitudeNumber) ||
+            Number.isNaN(totalSlotsNumber) ||
+            Number.isNaN(priceNumber)
+        ) {
+            return res.status(400).json({
+                message: "Invalid numeric parking data.",
+            });
+        }
+
+        if (
+            latitudeNumber < -90 ||
+            latitudeNumber > 90
+        ) {
+            return res.status(400).json({
+                message: "Latitude must be between -90 and 90.",
+            });
+        }
+
+        if (
+            longitudeNumber < -180 ||
+            longitudeNumber > 180
+        ) {
+            return res.status(400).json({
+                message: "Longitude must be between -180 and 180.",
+            });
+        }
+
+        if (totalSlotsNumber <= 0) {
+            return res.status(400).json({
+                message: "Total parking slots must be greater than 0.",
+            });
+        }
+
+        if (priceNumber < 0) {
+            return res.status(400).json({
+                message: "Price cannot be negative.",
+            });
+        }
+
+        // ===============================
+        // OCCUPIED SLOTS
+        // ===============================
+
+        const occupiedSlotsNumber =
+            occupiedSlots === undefined ||
+            occupiedSlots === null ||
+            occupiedSlots === "" ?
+            0 :
+            Number(occupiedSlots);
+
+        if (
+            Number.isNaN(occupiedSlotsNumber) ||
+            occupiedSlotsNumber < 0
+        ) {
+            return res.status(400).json({
+                message: "Invalid occupied slots value.",
+            });
+        }
+
+        if (
+            occupiedSlotsNumber > totalSlotsNumber
+        ) {
+            return res.status(400).json({
+                message: "Occupied slots cannot exceed total slots.",
+            });
+        }
+
+        // ===============================
         // CREATE PARKING
         // ===============================
 
         const parking = new Parking({
             name: name.trim(),
-
             address: address.trim(),
 
-            latitude: Number(latitude),
+            latitude: latitudeNumber,
+            longitude: longitudeNumber,
 
-            longitude: Number(longitude),
+            totalSlots: totalSlotsNumber,
 
-            totalSlots: Number(totalSlots),
+            occupiedSlots: occupiedSlotsNumber,
 
-            occupiedSlots: occupiedSlots !== undefined ?
-                Number(occupiedSlots) :
-                0,
-
-            pricePerHour: Number(pricePerHour),
+            pricePerHour: priceNumber,
 
             vehicleType: vehicleType || "Car",
         });
 
-        console.log("PARKING OBJECT BEFORE SAVE:");
-        console.log(parking);
+        console.log(
+            "PARKING DOCUMENT BEFORE SAVE:",
+            parking
+        );
 
         // ===============================
         // SAVE TO DATABASE
         // ===============================
 
-        const savedParking = await parking.save();
+        const savedParking =
+            await parking.save();
 
-        console.log("PARKING SAVED SUCCESSFULLY:");
-        console.log(savedParking);
+        console.log(
+            "PARKING CREATED SUCCESSFULLY:",
+            savedParking
+        );
 
         console.log("=================================");
 
@@ -136,10 +226,8 @@ exports.createParking = async(req, res) => {
         console.error("=================================");
         console.error("CREATE PARKING ERROR:");
         console.error(error);
-
         console.error("ERROR MESSAGE:");
         console.error(error.message);
-
         console.error("=================================");
 
         res.status(500).json({
@@ -148,14 +236,14 @@ exports.createParking = async(req, res) => {
     }
 };
 
-
 // ===============================
 // GET SINGLE PARKING BY ID
 // ===============================
 
 exports.getParkingById = async(req, res) => {
     try {
-        const parking = await Parking.findById(req.params.id);
+        const parking =
+            await Parking.findById(req.params.id);
 
         if (!parking) {
             return res.status(404).json({
@@ -166,14 +254,16 @@ exports.getParkingById = async(req, res) => {
         res.status(200).json(parking);
 
     } catch (error) {
-        console.error("GET PARKING ERROR:", error);
+        console.error(
+            "GET PARKING BY ID ERROR:",
+            error
+        );
 
         res.status(500).json({
             message: error.message,
         });
     }
 };
-
 
 // ===============================
 // UPDATE PARKING
@@ -199,14 +289,16 @@ exports.updateParking = async(req, res) => {
         res.status(200).json(parking);
 
     } catch (error) {
-        console.error("UPDATE PARKING ERROR:", error);
+        console.error(
+            "UPDATE PARKING ERROR:",
+            error
+        );
 
         res.status(500).json({
             message: error.message,
         });
     }
 };
-
 
 // ===============================
 // DELETE PARKING
@@ -230,7 +322,10 @@ exports.deleteParking = async(req, res) => {
         });
 
     } catch (error) {
-        console.error("DELETE PARKING ERROR:", error);
+        console.error(
+            "DELETE PARKING ERROR:",
+            error
+        );
 
         res.status(500).json({
             message: error.message,
